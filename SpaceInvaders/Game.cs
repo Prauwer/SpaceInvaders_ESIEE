@@ -37,6 +37,13 @@ namespace SpaceInvaders
         #endregion
 
         #region game technical elements
+
+        /// <summary>
+        ///  player's ship
+        /// </summary>
+        public SpaceShip playerShip;
+
+
         /// <summary>
         /// Size of the game area
         /// </summary>
@@ -89,6 +96,9 @@ namespace SpaceInvaders
         private Game(Size gameSize)
         {
             this.gameSize = gameSize;
+            Bitmap spaceShipImage = Properties.Resources.ship3;
+            this.playerShip = new SpaceShip(new Vecteur2D(gameSize.Width / 2, gameSize.Height - 100), 3, spaceShipImage);
+            gameObjects.Add(this.playerShip);
         }
 
         #endregion
@@ -144,11 +154,11 @@ namespace SpaceInvaders
             {
                 if (keyPressed.Contains(Keys.Left))
                 {
-                    deltaLeft = 1.0;
+                    deltaLeft = 2.0;
                 }
                 if (keyPressed.Contains(Keys.Right))
                 {
-                    deltaRight = 1.0;
+                    deltaRight = 2.0;
                 }
                 gameObject.Update(this, deltaT, deltaLeft:deltaLeft, deltaRight:deltaRight);
             }
