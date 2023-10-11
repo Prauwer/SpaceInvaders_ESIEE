@@ -61,6 +61,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BalleQuiTombe.cs" />
     <Compile Include="Vecteur2D.cs" />
+    <Compile Include="SpaceShip.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
