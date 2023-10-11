@@ -21,7 +21,7 @@ namespace SpaceInvaders
         /// </summary>
         /// <param name="gameInstance">instance of the current game</param>
         /// <param name="deltaT">time ellapsed in seconds since last call to Update</param>
-        public abstract void Update(Game gameInstance, double deltaT);
+        public abstract void Update(Game gameInstance, double deltaT, double deltaRight = 0.0, double deltaLeft = 0.0);
 
         /// <summary>
         /// Render the game object
