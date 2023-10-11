@@ -124,8 +124,6 @@ namespace SpaceInvaders
             // add new game objects
             gameObjects.UnionWith(pendingNewGameObjects);
             pendingNewGameObjects.Clear();
-            double deltaLeft = 0.0;
-            double deltaRight = 0.0;
 
 
             // if space is pressed
@@ -142,15 +140,7 @@ namespace SpaceInvaders
             // update each game object
             foreach (GameObject gameObject in gameObjects)
             {
-                if (keyPressed.Contains(Keys.Left))
-                {
-                    deltaLeft = 1.0;
-                }
-                if (keyPressed.Contains(Keys.Right))
-                {
-                    deltaRight = 1.0;
-                }
-                gameObject.Update(this, deltaT, deltaLeft:deltaLeft, deltaRight:deltaRight);
+                gameObject.Update(this, deltaT);
             }
 
             // remove dead objects
