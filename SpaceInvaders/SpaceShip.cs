@@ -23,7 +23,7 @@ namespace SpaceInvaders
             Image = image;
         }
 
-        public override void Update(Game gameInstance, double deltaT, double deltaRight = 0, double deltaLeft = 0)
+        public override void Update(Game gameInstance, double deltaT)
         {
             if (gameInstance.keyPressed.Contains(Keys.Left) && Position.x >= 0)
             {
