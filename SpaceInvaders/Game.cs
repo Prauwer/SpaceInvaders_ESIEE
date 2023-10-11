@@ -95,10 +95,13 @@ namespace SpaceInvaders
         /// <param name="gameSize">Size of the game area</param>
         private Game(Size gameSize)
         {
+
+            // Creation du vaisseau
             this.gameSize = gameSize;
             Bitmap spaceShipImage = Properties.Resources.ship3;
             this.playerShip = new SpaceShip(new Vecteur2D(gameSize.Width / 2, gameSize.Height - 100), 3, spaceShipImage);
             gameObjects.Add(this.playerShip);
+
         }
 
         #endregion
