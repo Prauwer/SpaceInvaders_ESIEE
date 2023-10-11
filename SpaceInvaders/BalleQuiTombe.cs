@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace SpaceInvaders
 {
@@ -51,12 +52,26 @@ namespace SpaceInvaders
 
         #region Methods
 
-        public override void Update(Game gameInstance, double deltaT, double deltaRight=0.0, double deltaLeft=0.0)
+        public override void Update(Game gameInstance, double deltaT)
         {
+
+            // Déplacement latéral de la balle
+            if (gameInstance.keyPressed.Contains(Keys.Left))
+            {
+                x -= 2.0;
+            }
+            if (gameInstance.keyPressed.Contains(Keys.Right))
+            {
+                x += 2.0;
+            }
+
+            // Chute de la balle
             y += ballSpeed * deltaT;
+
+            // Destruction de l'objet si mort
             if (y > gameInstance.gameSize.Height)
                 alive = false;
-            x += ( - deltaLeft + deltaRight);
+
         }
 
         public override void Draw(Game gameInstance, Graphics graphics)
