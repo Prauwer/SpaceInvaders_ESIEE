@@ -5,7 +5,6 @@ using System.Text;
 using System.Drawing;
 using System.Diagnostics;
 using System.Windows.Forms;
-using System.Reflection;
 
 namespace SpaceInvaders
 {
