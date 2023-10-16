@@ -14,13 +14,11 @@ namespace SpaceInvaders
         private double speedPixelPerSecond = 2.0;
         public Missile Missile { get; private set; }
 
-
-        public SpaceShip(Vecteur2D position, int lives, Bitmap image)
+        public SpaceShip(Vecteur2D position, int lives)
         {
             Position = position;
             Lives = lives;
-            Image = image;
-
+            Image = Properties.Resources.ship3;
         }
 
         public override void Update(Game gameInstance, double deltaT)

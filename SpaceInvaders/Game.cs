@@ -44,7 +44,6 @@ namespace SpaceInvaders
         /// </summary>
         public SpaceShip playerShip;
 
-
         /// <summary>
         /// Size of the game area
         /// </summary>
@@ -99,14 +98,13 @@ namespace SpaceInvaders
 
             // Creation du vaisseau
             this.gameSize = gameSize;
-            Bitmap spaceShipImage = Properties.Resources.ship3;
-            this.playerShip = new SpaceShip(new Vecteur2D(gameSize.Width / 2, gameSize.Height - 100), 3, spaceShipImage);
+
+            this.playerShip = new SpaceShip(new Vecteur2D(gameSize.Width / 2, gameSize.Height - 100), 3);
             AddNewGameObject(this.playerShip);
 
-            for (int i = 0; i < 3; i++)
-            {
+            for (int i = 0; i < 3; i++) {
                 int imageWidth = Properties.Resources.bunker.Width;
-                Vecteur2D Position = new Vecteur2D((gameSize.Width) / 3 * (i + 1) - (gameSize.Width / 6 + imageWidth / 2), gameSize.Height - 200);
+                Vecteur2D Position = new Vecteur2D((gameSize.Width) / 3 * (i + 1) - (gameSize.Width/6 + imageWidth/2), gameSize.Height - 200);
                 Bunker bunker = new Bunker(Position);
                 AddNewGameObject(bunker);
             }
