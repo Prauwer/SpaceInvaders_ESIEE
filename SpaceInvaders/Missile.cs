@@ -44,10 +44,6 @@ namespace SpaceInvaders
             Position.y += Speed * deltaT;
 
             // Tuer si le missile sort du cadre de jeu
-            /*if(Position.x < 0 || Position.x + Image.Size.Width >= gameInstance.gameSize.Width || Position.y < 0 || Position.x + Image.Size.Width <= gameInstance.gameSize.Height)
-            {
-                Lives = 0;
-            }*/
 
             if(Position.y < 0 || Position.y > gameInstance.gameSize.Width)
             {
