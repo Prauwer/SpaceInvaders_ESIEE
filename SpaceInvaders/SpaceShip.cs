@@ -9,12 +9,9 @@ using System.Windows.Forms;
 
 namespace SpaceInvaders
 {
-    internal class SpaceShip : GameObject
+    internal class SpaceShip : SimpleObject
     {
         private double speedPixelPerSecond = 2.0;
-        public Vecteur2D Position {  get; private set; }
-        public int Lives { get; private set; }
-        public Bitmap Image { get; private set; }
         public Missile Missile { get; private set; }
 
 
