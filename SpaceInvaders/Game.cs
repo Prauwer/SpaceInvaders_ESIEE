@@ -100,8 +100,7 @@ namespace SpaceInvaders
             this.gameSize = gameSize;
             Bitmap spaceShipImage = Properties.Resources.ship3;
             this.playerShip = new SpaceShip(new Vecteur2D(gameSize.Width / 2, gameSize.Height - 100), 3, spaceShipImage);
-            gameObjects.Add(this.playerShip);
-
+            AddNewGameObject(playerShip);
         }
 
         #endregion

@@ -9,7 +9,7 @@ namespace SpaceInvaders
 {
     internal class Missile : GameObject
     {
-
+        //Attributs
         public Vecteur2D Position { get; private set; }
         
         public double Speed { get; private set; }
@@ -18,21 +18,42 @@ namespace SpaceInvaders
 
         public Bitmap Image { get; private set; }
 
-        // TODO : INSERER CONSTRUCTEUR
+        //Constructeur
+        public Missile(Vecteur2D position, double speed, int lives, Bitmap image)
+        {
+            Position = position;
+            Speed = speed;
+            Lives = lives;
+            Image = image;
+        }
 
+        //Méthodes
         public override void Draw(Game gameInstance, Graphics graphics)
         {
-            throw new NotImplementedException();
+            graphics.DrawImage(Image, (float)Position.x, (float)Position.y, Image.Width, Image.Height);
         }
 
         public override bool IsAlive()
         {
-            throw new NotImplementedException();
+            return Lives > 0;
         }
 
         public override void Update(Game gameInstance, double deltaT)
         {
-            throw new NotImplementedException();
+            // Déplacement du missile
+            Position.y += Speed * deltaT;
+
+            // Tuer si le missile sort du cadre de jeu
+            /*if(Position.x < 0 || Position.x + Image.Size.Width >= gameInstance.gameSize.Width || Position.y < 0 || Position.x + Image.Size.Width <= gameInstance.gameSize.Height)
+            {
+                Lives = 0;
+            }*/
+
+            if(Position.y < 0 || Position.y > gameInstance.gameSize.Width)
+            {
+                Lives = 0;
+            }
+
         }
     }
 }
