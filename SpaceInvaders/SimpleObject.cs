@@ -22,5 +22,10 @@ namespace SpaceInvaders
         {
             return Lives > 0;
         }
+
+        public override void Collision(Missile m)
+        {
+            return;
+        }
     }
 }
