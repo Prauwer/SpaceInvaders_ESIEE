@@ -20,6 +20,14 @@ namespace SpaceInvaders
         /// </summary>
         public HashSet<GameObject> gameObjects = new HashSet<GameObject>();
 
+        public enum GameStates
+        {
+            Play,
+            Pause,
+        }
+
+        public GameStates State;
+
         /// <summary>
         /// Set of new game objects scheduled for addition to the game
         /// </summary>
@@ -122,6 +130,13 @@ namespace SpaceInvaders
         /// <param name="g">Graphics to draw in</param>
         public void Draw(Graphics g)
         {
+            // Draw "PAUSE" in the windows if the game is in Pause state 
+            if (State == GameStates.Pause) {
+                Font font = new Font("Arial", 24);
+                SolidBrush brush = new SolidBrush(Color.Black);
+                g.DrawString("PAUSE", font, brush, gameSize.Width / 2 - 60, gameSize.Height / 2 - 24);
+
+            }
             foreach (GameObject gameObject in gameObjects)
                 gameObject.Draw(this, g);       
         }
@@ -145,6 +160,18 @@ namespace SpaceInvaders
                 AddNewGameObject(newObject);
                 // release key space (no autofire)
                 ReleaseKey(Keys.Space);
+            }
+
+            //Switch the game to Play or Pause if p key is pressed
+            if (keyPressed.Contains(Keys.P) && State == GameStates.Pause)
+            {
+                State = GameStates.Play;
+                ReleaseKey(Keys.P);
+            }
+            else if (keyPressed.Contains(Keys.P) && State == GameStates.Play)
+            {
+                State = GameStates.Pause;
+                ReleaseKey(Keys.P);
             }
 
             // update each game object
