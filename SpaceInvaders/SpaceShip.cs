@@ -42,16 +42,6 @@ namespace SpaceInvaders
             }
         }
 
-        public override void Draw(Game gameInstance, Graphics graphics)
-        {
-            graphics.DrawImage(Image, (float)Position.x, (float)Position.y, Image.Width, Image.Height);
-        }
-        
-        public override bool IsAlive()
-        {
-            return Lives > 0;
-        }
-
         public void Shoot(Game gameInstance)
         {
             if (Missile == null || !Missile.IsAlive())
