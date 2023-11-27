@@ -9,21 +9,16 @@ using System.Windows.Forms;
 
 namespace SpaceInvaders
 {
-    internal class SpaceShip : GameObject
+    internal class SpaceShip : SimpleObject
     {
         private double speedPixelPerSecond = 2.0;
-        public Vecteur2D Position {  get; private set; }
-        public int Lives { get; private set; }
-        public Bitmap Image { get; private set; }
         public Missile Missile { get; private set; }
 
-
-        public SpaceShip(Vecteur2D position, int lives, Bitmap image)
+        public SpaceShip(Vecteur2D position, int lives)
         {
             Position = position;
             Lives = lives;
-            Image = image;
-
+            Image = Properties.Resources.ship3;
         }
 
         public override void Update(Game gameInstance, double deltaT)
@@ -47,27 +42,22 @@ namespace SpaceInvaders
             }
         }
 
-        public override void Draw(Game gameInstance, Graphics graphics)
-        {
-            graphics.DrawImage(Image, (float)Position.x, (float)Position.y, Image.Width, Image.Height);
-        }
-        
-        public override bool IsAlive()
-        {
-            return Lives > 0;
-        }
-
         public void Shoot(Game gameInstance)
         {
             if (Missile == null || !Missile.IsAlive())
             {
                 Bitmap missileImage = Properties.Resources.shoot1;
 
-                Missile = new Missile(new Vecteur2D(Position.x + Image.Width / 2 - missileImage.Width/2, Position.y), -400, 1, missileImage);
+                Missile = new Missile(new Vecteur2D(Position.x + Image.Width / 2 - missileImage.Width/2, Position.y), -400, 17, missileImage);
 
 
                 gameInstance.AddNewGameObject(Missile);
             }
+        }
+
+        public override void Collision(Missile m)
+        {
+            return;
         }
     }
 }

@@ -20,6 +20,14 @@ namespace SpaceInvaders
         /// </summary>
         public HashSet<GameObject> gameObjects = new HashSet<GameObject>();
 
+        public enum GameStates
+        {
+            Play,
+            Pause,
+        }
+
+        public GameStates State;
+
         /// <summary>
         /// Set of new game objects scheduled for addition to the game
         /// </summary>
@@ -42,7 +50,6 @@ namespace SpaceInvaders
         ///  player's ship
         /// </summary>
         public SpaceShip playerShip;
-
 
         /// <summary>
         /// Size of the game area
@@ -98,9 +105,16 @@ namespace SpaceInvaders
 
             // Creation du vaisseau
             this.gameSize = gameSize;
-            Bitmap spaceShipImage = Properties.Resources.ship3;
-            this.playerShip = new SpaceShip(new Vecteur2D(gameSize.Width / 2, gameSize.Height - 100), 3, spaceShipImage);
-            AddNewGameObject(playerShip);
+
+            this.playerShip = new SpaceShip(new Vecteur2D(gameSize.Width / 2, gameSize.Height - 100), 3);
+            AddNewGameObject(this.playerShip);
+
+            for (int i = 0; i < 3; i++) {
+                int imageWidth = Properties.Resources.bunker.Width;
+                Vecteur2D Position = new Vecteur2D((gameSize.Width) / 3 * (i + 1) - (gameSize.Width/6 + imageWidth/2), gameSize.Height - 200);
+                Bunker bunker = new Bunker(Position);
+                AddNewGameObject(bunker);
+            }
         }
 
         #endregion
@@ -124,6 +138,13 @@ namespace SpaceInvaders
         /// <param name="g">Graphics to draw in</param>
         public void Draw(Graphics g)
         {
+            // Draw "PAUSE" in the windows if the game is in Pause state 
+            if (State == GameStates.Pause) {
+                Font font = new Font("Arial", 24);
+                SolidBrush brush = new SolidBrush(Color.Black);
+                g.DrawString("PAUSE", font, brush, gameSize.Width / 2 - 60, gameSize.Height / 2 - 24);
+
+            }
             foreach (GameObject gameObject in gameObjects)
                 gameObject.Draw(this, g);       
         }
@@ -147,6 +168,18 @@ namespace SpaceInvaders
                 AddNewGameObject(newObject);
                 // release key space (no autofire)
                 ReleaseKey(Keys.Space);
+            }
+
+            //Switch the game to Play or Pause if p key is pressed
+            if (keyPressed.Contains(Keys.P) && State == GameStates.Pause)
+            {
+                State = GameStates.Play;
+                ReleaseKey(Keys.P);
+            }
+            else if (keyPressed.Contains(Keys.P) && State == GameStates.Play)
+            {
+                State = GameStates.Pause;
+                ReleaseKey(Keys.P);
             }
 
             // update each game object
