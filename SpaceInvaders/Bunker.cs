@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace SpaceInvaders
 {
@@ -38,9 +40,36 @@ namespace SpaceInvaders
         {
             if (CollisionRectangle(m))
             {
-                // TODO : TESTER PIXEL PAR PIXEL
+                for (int y = 0; y < m.Image.Height; y++)
+                {
+                    for (int x = 0; x < m.Image.Width; x++)
+                    {
+                        Color currentPixelColor = m.Image.GetPixel(x, y);
+
+                        if (currentPixelColor.A == 0)
+                        {
+                            continue;
+                        }
+
+                        double xBunker = m.Position.x + x - Position.x;
+                        double yBunker = m.Position.y + y - Position.y;
+
+                        if (xBunker < 0 || xBunker >= Image.Width
+                            || yBunker < 0 || yBunker >= Image.Height)
+                        {
+                            continue;
+                        }
+
+                        Color bunkerPixelColor = Image.GetPixel((int)xBunker, (int)yBunker);
+                        if (bunkerPixelColor.A != 0)
+                        {
+                            Color newColor = Color.FromArgb(0, 0, 0, 0);
+                            Image.SetPixel((int)xBunker, (int)yBunker, newColor);
+                            m.Lives -= 1;
+                        }
+                    }
+                }
             }
         }
-
     }
 }
