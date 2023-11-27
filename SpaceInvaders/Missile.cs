@@ -7,16 +7,11 @@ using System.Threading.Tasks;
 
 namespace SpaceInvaders
 {
-    internal class Missile : GameObject
+    internal class Missile : SimpleObject
     {
         //Attributs
-        public Vecteur2D Position { get; private set; }
-        
+       
         public double Speed { get; private set; }
-
-        public int Lives { get; private set; }
-
-        public Bitmap Image { get; private set; }
 
         //Constructeur
         public Missile(Vecteur2D position, double speed, int lives, Bitmap image)
@@ -28,15 +23,6 @@ namespace SpaceInvaders
         }
 
         //Méthodes
-        public override void Draw(Game gameInstance, Graphics graphics)
-        {
-            graphics.DrawImage(Image, (float)Position.x, (float)Position.y, Image.Width, Image.Height);
-        }
-
-        public override bool IsAlive()
-        {
-            return Lives > 0;
-        }
 
         public override void Update(Game gameInstance, double deltaT)
         {
@@ -44,12 +30,21 @@ namespace SpaceInvaders
             Position.y += Speed * deltaT;
 
             // Tuer si le missile sort du cadre de jeu
-
             if(Position.y < 0 - Image.Height || Position.y > gameInstance.gameSize.Width)
             {
                 Lives = 0;
             }
 
+            // Test collision avec les objets du jeu
+            foreach (GameObject gameObject in gameInstance.gameObjects)
+            {
+                gameObject.Collision(this);
+            }
+        }
+
+        public override void Collision(Missile m)
+        {
+            return;
         }
     }
 }
