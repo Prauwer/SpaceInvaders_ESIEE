@@ -49,7 +49,7 @@ namespace SpaceInvaders
         /// <summary>
         ///  enemy ship block
         /// </summary>
-        public EnemyBlock enemyBlock;
+        public EnemyBlock enemies;
 
 
         /// <summary>
@@ -112,10 +112,18 @@ namespace SpaceInvaders
 
             // Création du bloc d'ennemis
 
-            int enemyBlockOffsetX = 20;
-            int enemyBlockOffsetY = 30;
-            this.enemyBlock = new EnemyBlock(new Vecteur2D(enemyBlockOffsetX,enemyBlockOffsetY),gameSize.Width-enemyBlockOffsetX*2);
-            AddNewGameObject(this.enemyBlock);
+            int enemyBlockOffsetX = 80;
+            int enemyBlockOffsetY = Properties.Resources.ship6.Height;
+            this.enemies = new EnemyBlock(new Vecteur2D(enemyBlockOffsetX,enemyBlockOffsetY),gameSize.Width-enemyBlockOffsetX*2);
+
+            enemies.AddLine(1, 50, Properties.Resources.ship6);
+            enemies.AddLine(2, 20, Properties.Resources.ship7);
+            enemies.AddLine(5, 10, Properties.Resources.ship1);
+            enemies.AddLine(6, 10, Properties.Resources.ship4);
+            enemies.AddLine(7, 10, Properties.Resources.ship2);
+
+            AddNewGameObject(this.enemies);
+
 
             // Creation du vaisseau
 

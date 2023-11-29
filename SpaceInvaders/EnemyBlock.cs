@@ -26,38 +26,26 @@ namespace SpaceInvaders
 
             size.Width= baseWidth;
             size.Height = 0;
-
-            // DEBUG
-            AddLine(1, 1, Properties.Resources.ship6);
-            AddLine(5, 1, Properties.Resources.ship1);
-            AddLine(6, 1, Properties.Resources.ship4);
-            AddLine(7, 1, Properties.Resources.ship2);
-
-            // FIN DEBUG
         }
 
-        void AddLine(int nbShips, int nbLives, Bitmap shipImage)
+        public void AddLine(int nbShips, int nbLives, Bitmap shipImage)
         {
             for(int i = 0; i<nbShips; i++)
             {
                 Vecteur2D newSPPos = new Vecteur2D(0, Position.y + size.Height);
-                // TODO : ERREUR D'ALIGNEMENT
                 if (nbShips == 1)
                 {
                     newSPPos.x = Position.x + baseWidth / 2 - shipImage.Width / 2;
                 }
                 else
                 {
-                    //newSPPos.x = Position.x + (baseWidth / nbShips + 1) * i;
-                    newSPPos.x = Position.x + ((baseWidth-nbShips*shipImage.Width)/(nbShips+1))*i+i*shipImage.Width;
-                    //newSPPos.x = Position.x + i * (baseWidth - (nbShips - 1) * shipImage.Width / nbShips);
-                    //newSPPos.x = Position.x + i * (baseWidth - nbShips * shipImage.Width / nbShips - 1);
+                    newSPPos.x = Position.x + i * (baseWidth - shipImage.Width) / (nbShips - 1);
+
 
                 }
                 SpaceShip newspaceship = new SpaceShip(newSPPos, nbLives, shipImage);
                 enemyships.Add(newspaceship);
             }
-
             size.Height += shipImage.Height;
         }
 
@@ -86,9 +74,13 @@ namespace SpaceInvaders
             return (enemyships.Count != 0);
         }
 
-        public override void Update(Game gameInstance, double deltaT)
+        public override void Update(Game gameInstance, double deltaT)   // TODO : A TERMINER
         {
-            //throw new NotImplementedException();
+            Position.x += 20 * deltaT;
+            foreach (SpaceShip ship in enemyships){
+                ship.Position.x += 20 * deltaT;
+            }
+
         }
 
         public override void Collision(Missile m) // TODO : Ne devrait pas être là/ne fait rien. Voir GameObject.cs
