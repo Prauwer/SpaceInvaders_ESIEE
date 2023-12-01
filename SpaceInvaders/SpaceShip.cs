@@ -49,8 +49,6 @@ namespace SpaceInvaders
 
         protected override void OnCollision(Missile m, int numberOfPixelsInCollision)
         {
-            Console.WriteLine("OI");
-
             int damage = Math.Min(m.Lives, this.Lives);
             m.Lives -= damage;
             this.Lives -= damage;
