@@ -17,6 +17,7 @@ namespace SpaceInvaders
         private int direction;
         private double speed;
         private double speedMultiplier;
+        private double randomShootProbability = 0.1;
 
         public Size size;
 
@@ -84,10 +85,18 @@ namespace SpaceInvaders
 
         public override void Update(Game gameInstance, double deltaT)
         {   
-            // Déplacement latéral
             Position.x += speed * deltaT * direction;
             foreach (SpaceShip ship in enemyships){
+                // Déplacement latéral
                 ship.Position.x += speed * deltaT * direction;
+
+                // Tir des enemis
+                Random rand = new Random();
+                double r = rand.NextDouble();
+                if (r <= randomShootProbability * deltaT)
+                {
+                    ship.Shoot(gameInstance);
+                }
             }
 
             // Le block a atteint un bord
