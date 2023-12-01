@@ -11,6 +11,7 @@ namespace SpaceInvaders
     {
         protected SimpleObject(Side Side) : base(Side)
         {
+
         }
 
         public Vecteur2D Position { get; protected set; }
@@ -46,7 +47,7 @@ namespace SpaceInvaders
 
         public override void Collision(Missile m)
         {
-            if (CollisionRectangle(m))
+            if (CollisionRectangle(m) && this.Side!=m.Side)
             {
                 int numberOfPixelsInCollision = 0;
 
