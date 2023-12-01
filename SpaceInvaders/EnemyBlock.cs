@@ -22,7 +22,7 @@ namespace SpaceInvaders
 
         public Vecteur2D Position;
 
-        public EnemyBlock(Vecteur2D position, int width)
+        public EnemyBlock(Vecteur2D position, int width): base(Side.Enemy)
         {
             Position = position;
             baseWidth= width;
@@ -49,7 +49,7 @@ namespace SpaceInvaders
 
 
                 }
-                SpaceShip newspaceship = new SpaceShip(newSPPos, nbLives, shipImage);
+                SpaceShip newspaceship = new SpaceShip(newSPPos, nbLives, shipImage, Side.Enemy);
                 enemyships.Add(newspaceship);
             }
             size.Height += shipImage.Height;

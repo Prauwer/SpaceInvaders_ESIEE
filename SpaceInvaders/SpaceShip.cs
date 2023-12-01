@@ -11,7 +11,6 @@ namespace SpaceInvaders
 {
     internal class SpaceShip : SimpleObject
     {
-        public Side Side {  get; private set; }
 
         private double speedPixelPerSecond = 2.0;
         public Missile Missile { get; private set; }
