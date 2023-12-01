@@ -10,16 +10,19 @@ namespace SpaceInvaders
     internal class Missile : SimpleObject
     {
         //Attributs
+
+        public Side Side { get; private set; }
        
         public double Speed { get; private set; }
 
         //Constructeur
-        public Missile(Vecteur2D position, double speed, int lives, Bitmap image)
+        public Missile(Vecteur2D position, double speed, int lives, Bitmap image, Side side)
         {
             Position = position;
             Speed = speed;
             Lives = lives;
             Image = image;
+            Side = side;
         }
 
         //Méthodes

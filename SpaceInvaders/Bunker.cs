@@ -10,6 +10,9 @@ namespace SpaceInvaders
 {
     internal class Bunker : SimpleObject
     {
+
+        public Side Side { get; set; } = Side.Neutral;
+
         public Bunker(Vecteur2D Position)
         {
             this.Position = Position;
