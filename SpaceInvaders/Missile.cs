@@ -14,7 +14,7 @@ namespace SpaceInvaders
         public double Speed { get; private set; }
 
         //Constructeur
-        public Missile(Vecteur2D position, double speed, int lives, Bitmap image)
+        public Missile(Vecteur2D position, double speed, int lives, Bitmap image, Side side): base(side)
         {
             Position = position;
             Speed = speed;

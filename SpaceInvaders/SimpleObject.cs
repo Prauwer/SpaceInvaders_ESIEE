@@ -9,6 +9,10 @@ namespace SpaceInvaders
 {
     abstract class SimpleObject : GameObject
     {
+        protected SimpleObject(Side Side) : base(Side)
+        {
+        }
+
         public Vecteur2D Position { get; protected set; }
         public int Lives { get; set; } = 1;
         public Bitmap Image { get; protected set; }
