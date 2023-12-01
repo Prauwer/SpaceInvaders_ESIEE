@@ -13,7 +13,7 @@ namespace SpaceInvaders
         {
         }
 
-        public Side ObjectSide { get; private set; }
+        public Side Side { get; private set; }
         public Vecteur2D Position { get; protected set; }
         public int Lives { get; set; } = 1;
         public Bitmap Image { get; protected set; }

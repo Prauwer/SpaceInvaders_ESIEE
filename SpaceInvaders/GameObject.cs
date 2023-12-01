@@ -20,9 +20,9 @@ namespace SpaceInvaders
     abstract class GameObject
     {
 
-        public Side ObjectSide { get; private set; }
+        public Side Side { get; private set; }
         
-        public GameObject(Side ObjectSide)
+        public GameObject(Side Side)
         {
         }
 
@@ -46,6 +46,6 @@ namespace SpaceInvaders
         /// <returns>Am I alive ?</returns>
         public abstract bool IsAlive();
 
-        public abstract void Collision(Missile m);
+        public abstract void Collision(Missile m); // TODO : déplacer la méthode dans Simple Object si besoin
     }
 }
