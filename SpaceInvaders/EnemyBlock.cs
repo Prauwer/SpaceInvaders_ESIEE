@@ -14,15 +14,21 @@ namespace SpaceInvaders
 
         private int baseWidth;
 
+        private int direction;
+        private double speed;
+        private double speedMultiplier;
+
         public Size size;
 
         public Vecteur2D Position;
 
         public EnemyBlock(Vecteur2D position, int width)
         {
-
             Position = position;
             baseWidth= width;
+            direction = 1;
+            speed = 20;
+            speedMultiplier = 1.15;
 
             size.Width= baseWidth;
             size.Height = 0;
@@ -74,13 +80,35 @@ namespace SpaceInvaders
             return (enemyships.Count != 0);
         }
 
-        public override void Update(Game gameInstance, double deltaT)   // TODO : A TERMINER
+        public void MoveBlockDown() // TODO : A TERMINER. BUG = PARFOIS LE BLOCK DESCEND PLUSIEURS FOIS D'UN COUP // FIXED?
         {
-            Position.x += 20 * deltaT;
+            speed *= speedMultiplier;
+            direction *= -1;
+            Position.y += 20;
+            foreach (SpaceShip ship in enemyships)
+            {
+                ship.Position.y += 20;
+            }
+        }
+
+        public override void Update(Game gameInstance, double deltaT) // TODO : CHECK PREV. TODO
+        {   
+            // Déplacement latéral
+            Position.x += speed * deltaT * direction;
             foreach (SpaceShip ship in enemyships){
-                ship.Position.x += 20 * deltaT;
+                ship.Position.x += speed * deltaT * direction;
             }
 
+            // Le block a atteint un bord
+            if (Position.x < 0)
+            {
+                Position.x = 0;
+                MoveBlockDown();
+            }else if(Position.x + size.Width > gameInstance.gameSize.Width)
+            {
+                Position.x = gameInstance.gameSize.Width-size.Width;
+                MoveBlockDown();
+            }
         }
 
         public override void Collision(Missile m) // TODO : Ne devrait pas être là/ne fait rien. Voir GameObject.cs
