@@ -106,7 +106,7 @@ namespace SpaceInvaders
             // Creation du vaisseau
             this.gameSize = gameSize;
 
-            this.playerShip = new SpaceShip(new Vecteur2D(gameSize.Width / 2, gameSize.Height - 100), 3);
+            this.playerShip = new SpaceShip(new Vecteur2D(gameSize.Width / 2, gameSize.Height - 100), 3, Side.Ally);
             AddNewGameObject(this.playerShip);
 
             for (int i = 0; i < 3; i++) {

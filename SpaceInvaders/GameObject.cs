@@ -22,7 +22,7 @@ namespace SpaceInvaders
 
         public Side ObjectSide { get; private set; }
         
-        public GameObject()
+        public GameObject(Side ObjectSide)
         {
         }
 
