@@ -46,6 +46,6 @@ namespace SpaceInvaders
         /// <returns>Am I alive ?</returns>
         public abstract bool IsAlive();
 
-        public abstract void Collision(Missile m); // TODO : déplacer la méthode dans Simple Object si besoin
+        public abstract void Collision(Missile m);
     }
 }
