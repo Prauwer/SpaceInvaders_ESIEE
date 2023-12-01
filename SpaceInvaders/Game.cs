@@ -22,6 +22,7 @@ namespace SpaceInvaders
 
         public enum GameStates
         {
+            Initial,
             Play,
             Pause,
         }
@@ -172,8 +173,18 @@ namespace SpaceInvaders
                 g.DrawString("PAUSE", font, brush, gameSize.Width / 2 - 60, gameSize.Height / 2 - 24);
 
             }
-            foreach (GameObject gameObject in gameObjects)
-                gameObject.Draw(this, g);
+
+            if (State != GameStates.Initial)
+            {
+                foreach (GameObject gameObject in gameObjects)
+                    gameObject.Draw(this, g);
+            }
+            else
+            {
+                Font font = new Font("Arial", 16);
+                SolidBrush brush = new SolidBrush(Color.Black);
+                g.DrawString("Appuyez sur Entrée pour continuer", font, brush, gameSize.Width / 2 - 180, gameSize.Height / 2 - 24);
+            }
         }
 
         /// <summary>
@@ -184,8 +195,7 @@ namespace SpaceInvaders
             // add new game objects
             gameObjects.UnionWith(pendingNewGameObjects);
             pendingNewGameObjects.Clear();
-
-
+          
             // if space is pressed DEBUG SPAWN BALLE QUI TOMBE
             if (keyPressed.Contains(Keys.Space))
             {
@@ -196,6 +206,12 @@ namespace SpaceInvaders
                 // release key space (no autofire)
                 ReleaseKey(Keys.Space);
             }
+
+            //launch the game when Enter is pressed
+            if (keyPressed.Contains(Keys.Enter) && State == GameStates.Initial)
+            {
+                State = GameStates.Play;
+                ReleaseKey(Keys.Enter);
 
             //DEBUG SPAWN MISSILE
             if (keyPressed.Contains(Keys.Down))
@@ -209,7 +225,7 @@ namespace SpaceInvaders
             }
 
             //Switch the game to Play or Pause if p key is pressed
-            if (keyPressed.Contains(Keys.P) && State == GameStates.Pause)
+            else if (keyPressed.Contains(Keys.P) && State == GameStates.Pause)
             {
                 State = GameStates.Play;
                 ReleaseKey(Keys.P);
@@ -219,6 +235,12 @@ namespace SpaceInvaders
                 State = GameStates.Pause;
                 ReleaseKey(Keys.P);
             }
+            else if (State != GameStates.Play)
+            {
+                return;
+            }
+
+            //Don't update the gameOjects if the game is in Pause's state
 
             // update each game object
             foreach (GameObject gameObject in gameObjects)
