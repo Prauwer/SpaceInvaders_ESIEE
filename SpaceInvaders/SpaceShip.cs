@@ -39,16 +39,21 @@ namespace SpaceInvaders
             {
                 Bitmap missileImage = Properties.Resources.shoot1;
 
-                Missile = new Missile(new Vecteur2D(Position.x + Image.Width / 2 - missileImage.Width/2, Position.y), -400, 17, missileImage);
+                // TODO : DEBUG/ RETIRER LE -20 APRES Position.y QUAND ON AURA LE FF
+                Missile = new Missile(new Vecteur2D(Position.x + Image.Width / 2 - missileImage.Width/2, Position.y - 20), -400, 17, missileImage);
 
 
                 gameInstance.AddNewGameObject(Missile);
             }
         }
 
-        public override void Collision(Missile m)
+        protected override void OnCollision(Missile m, int numberOfPixelsInCollision)
         {
-            return;
+            Console.WriteLine("OI");
+
+            int damage = Math.Min(m.Lives, this.Lives);
+            m.Lives -= damage;
+            this.Lives -= damage;
         }
     }
 }
