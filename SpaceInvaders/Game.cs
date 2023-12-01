@@ -47,9 +47,15 @@ namespace SpaceInvaders
         #region game technical elements
 
         /// <summary>
+        ///  enemy ship block
+        /// </summary>
+        public EnemyBlock enemies;
+
+
+        /// <summary>
         ///  player's ship
         /// </summary>
-        public SpaceShip playerShip;
+        public PlayerSpaceship playerShip;
 
         /// <summary>
         /// Size of the game area
@@ -102,11 +108,28 @@ namespace SpaceInvaders
         /// <param name="gameSize">Size of the game area</param>
         private Game(Size gameSize)
         {
-
-            // Creation du vaisseau
             this.gameSize = gameSize;
 
-            this.playerShip = new SpaceShip(new Vecteur2D(gameSize.Width / 2, gameSize.Height - 100), 3);
+            // Création du bloc d'ennemis
+
+            int enemyBlockOffsetX = 80;
+            int enemyBlockOffsetY = Properties.Resources.ship6.Height;
+            this.enemies = new EnemyBlock(new Vecteur2D(enemyBlockOffsetX,enemyBlockOffsetY),gameSize.Width-enemyBlockOffsetX*2);
+
+            enemies.AddLine(1, 50, Properties.Resources.ship6);
+            enemies.AddLine(2, 20, Properties.Resources.ship7);
+            enemies.AddLine(5, 10, Properties.Resources.ship1);
+            enemies.AddLine(6, 10, Properties.Resources.ship4);
+            enemies.AddLine(7, 10, Properties.Resources.ship2);
+
+            AddNewGameObject(this.enemies);
+
+
+            // Creation du vaisseau
+
+            this.playerShip = new PlayerSpaceship(new Vecteur2D(0,0), 3);
+            playerShip.Position.x = (gameSize.Width / 2) - playerShip.Image.Width / 2;
+            playerShip.Position.y = gameSize.Height - 100;
             AddNewGameObject(this.playerShip);
 
             for (int i = 0; i < 3; i++) {
