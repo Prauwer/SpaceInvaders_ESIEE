@@ -23,7 +23,7 @@ namespace SpaceInvaders
 
         public Vecteur2D Position;
 
-        public EnemyBlock(Vecteur2D position, int width)
+        public EnemyBlock(Vecteur2D position, int width): base(Side.Enemy)
         {
             Position = position;
             baseWidth= width;
