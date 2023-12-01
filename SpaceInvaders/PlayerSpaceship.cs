@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +33,14 @@ namespace SpaceInvaders
             {
                 Shoot(gameInstance);
             }
+        }
+
+        public override void Draw(Game gameInstance, Graphics graphics)
+        {
+            base.Draw(gameInstance, graphics);
+            Font font = new Font("Arial", 12);
+            SolidBrush brush = new SolidBrush(Color.Black);
+            graphics.DrawString($"{Lives} vies restantes", font, brush, gameInstance.gameSize.Width /20, gameInstance.gameSize.Height*19/20);
         }
     }
 }
