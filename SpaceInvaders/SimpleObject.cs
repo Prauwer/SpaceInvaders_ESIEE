@@ -9,7 +9,7 @@ namespace SpaceInvaders
 {
     abstract class SimpleObject : GameObject
     {
-        protected SimpleObject(Side ObjectSide) : base(ObjectSide)
+        protected SimpleObject(Side Side) : base(Side)
         {
         }
 
