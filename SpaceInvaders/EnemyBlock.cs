@@ -10,7 +10,7 @@ namespace SpaceInvaders
     internal class EnemyBlock : GameObject
     {
 
-        private HashSet<SpaceShip> enemyships= new HashSet<SpaceShip>();
+        public HashSet<SpaceShip> enemyships {get; private set; } = new HashSet<SpaceShip>() ;
 
         private int baseWidth;
 
@@ -60,19 +60,10 @@ namespace SpaceInvaders
 
         }
 
-        public override void Draw(Game gameInstance, Graphics graphics)
+        public override void Draw(Game gameInstance, Graphics graphics) // DEBUG
         {
-
-            // DEBUG
             Pen pen = new Pen(Color.Red, 2);
             graphics.DrawRectangle(pen, (int)Position.x, (int)Position.y, size.Width, size.Height);
-            // FIN DEBUG
-
-
-            foreach (SpaceShip ship in enemyships)
-            {
-                ship.Draw(gameInstance, graphics);
-            }
         }
 
         public override bool IsAlive()
@@ -80,7 +71,7 @@ namespace SpaceInvaders
             return (enemyships.Count != 0);
         }
 
-        public void MoveBlockDown() // TODO : A TERMINER. BUG = PARFOIS LE BLOCK DESCEND PLUSIEURS FOIS D'UN COUP // FIXED?
+        public void MoveBlockDown()
         {
             speed *= speedMultiplier;
             direction *= -1;
@@ -91,7 +82,7 @@ namespace SpaceInvaders
             }
         }
 
-        public override void Update(Game gameInstance, double deltaT) // TODO : CHECK PREV. TODO
+        public override void Update(Game gameInstance, double deltaT)
         {   
             // Déplacement latéral
             Position.x += speed * deltaT * direction;
@@ -111,9 +102,30 @@ namespace SpaceInvaders
             }
         }
 
-        public override void Collision(Missile m) // TODO : Ne devrait pas être là/ne fait rien. Voir GameObject.cs
+        public bool CollisionRectangle(Missile m)
         {
-            //throw new NotImplementedException();
+            if (m.Position.x <= this.Position.x + this.size.Width // Le missile est en collision gauche de l'objet
+             && m.Position.x + m.Image.Width >= this.Position.x    // Le missile est en collision droite de l'objet
+             && m.Position.y + m.Image.Height >= this.Position.y   // Le missile est en collision haut de l'objet
+             && m.Position.y <= this.Position.y + this.size.Height)  // Le missile est en collision bas de l'objet
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public override void Collision(Missile m)
+        {
+            if (CollisionRectangle(m))
+            {
+                foreach (SpaceShip ship in enemyships)
+                {
+                    ship.Collision(m);
+                }
+            }
+
         }
     }
 }
