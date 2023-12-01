@@ -6,13 +6,23 @@ using System.Text;
 
 namespace SpaceInvaders
 {
+
+    public enum Side
+    {
+        Ally,
+        Enemy,
+        Neutral,
+    }
+
     /// <summary>
     /// This is the generic abstact base class for any entity in the game
     /// </summary>
     abstract class GameObject
     {
-       
-        public GameObject()
+
+        public Side Side { get; private set; }
+        
+        public GameObject(Side Side)
         {
         }
 
@@ -36,6 +46,6 @@ namespace SpaceInvaders
         /// <returns>Am I alive ?</returns>
         public abstract bool IsAlive();
 
-        public abstract void Collision(Missile m); // TODO : déplacer la méthode dans Simple Object si besoin
+        public abstract void Collision(Missile m);
     }
 }

@@ -10,7 +10,7 @@ namespace SpaceInvaders
 {
     internal class PlayerSpaceship : SpaceShip
     {
-        public PlayerSpaceship(Vecteur2D position, int lives) : base(position, lives)
+        public PlayerSpaceship(Vecteur2D position, int lives) : base(position, lives, Properties.Resources.ship3, Side.Ally)
         {
         }
 

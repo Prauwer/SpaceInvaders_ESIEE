@@ -14,7 +14,7 @@ namespace SpaceInvaders
         public double Speed { get; private set; }
 
         //Constructeur
-        public Missile(Vecteur2D position, double speed, int lives, Bitmap image)
+        public Missile(Vecteur2D position, double speed, int lives, Bitmap image, Side side): base(side)
         {
             Position = position;
             Speed = speed;
@@ -38,13 +38,16 @@ namespace SpaceInvaders
             // Test collision avec les objets du jeu
             foreach (GameObject gameObject in gameInstance.gameObjects)
             {
-                gameObject.Collision(this);
+                if (gameObject != this) {
+                    gameObject.Collision(this);
+                }
             }
         }
 
-        public override void Collision(Missile m)
+        protected override void OnCollision(Missile m, int numberOfPixelsInCollision)
         {
-            return;
+            m.Lives = 0;
+            this.Lives = 0;
         }
     }
 }

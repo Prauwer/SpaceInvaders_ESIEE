@@ -124,11 +124,15 @@ namespace SpaceInvaders
             enemies.AddLine(7, 10, Properties.Resources.ship2);
 
             AddNewGameObject(this.enemies);
+            foreach (SpaceShip enemyship in enemies.enemyships)
+            {
+                AddNewGameObject(enemyship);
+            }
 
 
             // Creation du vaisseau
 
-            this.playerShip = new PlayerSpaceship(new Vecteur2D(0,0), 3);
+            this.playerShip = new PlayerSpaceship(new Vecteur2D(0,0), 300);
             playerShip.Position.x = (gameSize.Width / 2) - playerShip.Image.Width / 2;
             playerShip.Position.y = gameSize.Height - 100;
             AddNewGameObject(this.playerShip);
@@ -169,6 +173,7 @@ namespace SpaceInvaders
                 g.DrawString("PAUSE", font, brush, gameSize.Width / 2 - 60, gameSize.Height / 2 - 24);
 
             }
+
             if (State != GameStates.Initial)
             {
                 foreach (GameObject gameObject in gameObjects)
@@ -190,8 +195,8 @@ namespace SpaceInvaders
             // add new game objects
             gameObjects.UnionWith(pendingNewGameObjects);
             pendingNewGameObjects.Clear();
-
-            // if space is pressed
+          
+            // if space is pressed DEBUG SPAWN BALLE QUI TOMBE
             if (keyPressed.Contains(Keys.Space))
             {
                 // create new BalleQuiTombe
@@ -207,6 +212,16 @@ namespace SpaceInvaders
             {
                 State = GameStates.Play;
                 ReleaseKey(Keys.Enter);
+
+            //DEBUG SPAWN MISSILE
+            if (keyPressed.Contains(Keys.Down))
+            {
+                // create new BalleQuiTombe
+                GameObject newObject = new Missile(new Vecteur2D(playerShip.Position.x, 0), 100, 150, Properties.Resources.shoot2);
+                // add it to the game
+                AddNewGameObject(newObject);
+                // release key space (no autofire)
+                ReleaseKey(Keys.Down);
             }
 
             //Switch the game to Play or Pause if p key is pressed
