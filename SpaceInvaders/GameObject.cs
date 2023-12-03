@@ -24,6 +24,7 @@ namespace SpaceInvaders
         
         public GameObject(Side Side)
         {
+            this.Side = Side;
         }
 
         /// <summary>

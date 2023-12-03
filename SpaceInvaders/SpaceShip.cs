@@ -27,13 +27,13 @@ namespace SpaceInvaders
 
         }
 
-        public void Shoot(Game gameInstance, int direction)
+        public void Shoot(Game gameInstance, int direction, Side side)
         {
             if (Missile == null || !Missile.IsAlive())
             {
                 Bitmap missileImage = Properties.Resources.shoot1;
 
-                Missile = new Missile(new Vecteur2D(Position.x + Image.Width / 2 - missileImage.Width/2, Position.y), direction*400, 17, missileImage, Side.Ally);
+                Missile = new Missile(new Vecteur2D(Position.x + Image.Width / 2 - missileImage.Width/2, Position.y), direction*400, 17, missileImage, side);
 
 
                 gameInstance.AddNewGameObject(Missile);
@@ -42,8 +42,6 @@ namespace SpaceInvaders
 
         protected override void OnCollision(Missile m, int numberOfPixelsInCollision)
         {
-            Console.WriteLine("OI");
-
             int damage = Math.Min(m.Lives, this.Lives);
             m.Lives -= damage;
             this.Lives -= damage;
