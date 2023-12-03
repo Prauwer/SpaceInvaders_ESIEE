@@ -201,7 +201,7 @@ namespace SpaceInvaders
             if (keyPressed.Contains(Keys.Down))
             {
                 // create new BalleQuiTombe
-                GameObject newObject = new Missile(new Vecteur2D(playerShip.Position.x, 0), 100, 150, Properties.Resources.shoot2);
+                GameObject newObject = new Missile(new Vecteur2D(playerShip.Position.x, 0), 100, 150, Properties.Resources.shoot2, Side.Neutral);
                 // add it to the game
                 AddNewGameObject(newObject);
                 // release key space (no autofire)
