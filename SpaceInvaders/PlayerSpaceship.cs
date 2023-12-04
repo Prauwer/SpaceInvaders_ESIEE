@@ -31,7 +31,8 @@ namespace SpaceInvaders
             // Tirer un missile
             if (gameInstance.keyPressed.Contains(Keys.Up))
             {
-                Shoot(gameInstance);
+                // Le -1 correspond a la direction vers le haut
+                Shoot(gameInstance, -1, Side.Ally);
             }
         }
 

@@ -27,13 +27,14 @@ namespace SpaceInvaders
 
         }
 
-        public void Shoot(Game gameInstance)
+        public void Shoot(Game gameInstance, int direction, Side side)
         {
             if (Missile == null || !Missile.IsAlive())
             {
                 Bitmap missileImage = Properties.Resources.shoot1;
 
-                Missile = new Missile(new Vecteur2D(Position.x + Image.Width / 2 - missileImage.Width/2, Position.y), -400, 17, missileImage, Side);
+                Missile = new Missile(new Vecteur2D(Position.x + Image.Width / 2 - missileImage.Width/2, Position.y), direction*400, 17, missileImage, side);
+
 
                 gameInstance.AddNewGameObject(Missile);
             }
