@@ -52,6 +52,7 @@ namespace SpaceInvaders
         /// </summary>
         public EnemyBlock enemies;
 
+        public Trigger trigger;
 
         /// <summary>
         ///  player's ship
@@ -128,6 +129,10 @@ namespace SpaceInvaders
             {
                 AddNewGameObject(enemyship);
             }
+
+            // Creation du trigger
+            trigger = new Trigger(new Vecteur2D(0, 0), new Size(605, 100));
+            AddNewGameObject(this.trigger);
 
 
             // Creation du vaisseau
@@ -247,6 +252,7 @@ namespace SpaceInvaders
             {
                 gameObject.Update(this, deltaT);
             }
+             
 
             // remove dead objects
             gameObjects.RemoveWhere(gameObject => !gameObject.IsAlive());
