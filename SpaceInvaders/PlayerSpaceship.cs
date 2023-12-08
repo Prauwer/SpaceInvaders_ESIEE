@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,8 +39,10 @@ namespace SpaceInvaders
         public override void Draw(Game gameInstance, Graphics graphics)
         {
             base.Draw(gameInstance, graphics);
-            Font font = new Font("Arial", 12);
-            SolidBrush brush = new SolidBrush(Color.Black);
+            PrivateFontCollection privateFontCollection = new PrivateFontCollection();
+            privateFontCollection.AddFontFile("C:\\Users\\antoninmansour\\source\\repos\\projet-spaceinvaders2023-zackary-saada-antonin-mansour\\SpaceInvaders\\Resources\\space_invaders.ttf");
+            SolidBrush brush = new SolidBrush(Color.White);
+            Font font = new Font(privateFontCollection.Families[0], 12);
             graphics.DrawString($"{Lives} vies restantes", font, brush, gameInstance.gameSize.Width /20, gameInstance.gameSize.Height*19/20);
         }
     }

@@ -33,7 +33,8 @@ namespace SpaceInvaders
             {
                 Bitmap missileImage = Properties.Resources.shoot1;
 
-                Missile = new Missile(new Vecteur2D(Position.x + Image.Width / 2 - missileImage.Width/2, Position.y), -400, 17, missileImage, Side);
+                Missile = new Missile(new Vecteur2D(Position.x + Image.Width / 2 - missileImage.Width/2, Position.y), direction*400, 20, missileImage, side);
+
 
                 gameInstance.AddNewGameObject(Missile);
             }
