@@ -69,8 +69,8 @@ namespace SpaceInvaders
 
         public override void Draw(Game gameInstance, Graphics graphics) // DEBUG
         {
-            Pen pen = new Pen(Color.Red, 2);
-            graphics.DrawRectangle(pen, (int)Position.x, (int)Position.y, size.Width, size.Height);
+            //Pen pen = new Pen(Color.Red, 2);
+            //graphics.DrawRectangle(pen, (int)Position.x, (int)Position.y, size.Width, size.Height);
         }
 
         public override bool IsAlive()
@@ -95,7 +95,7 @@ namespace SpaceInvaders
                 }
             }
             direction *= -1;                         // Inverser la direction
-            randomShootProbability *= 1.5;
+            randomShootProbability *= 2;
         }
 
         public override void Update(Game gameInstance, double deltaT)
