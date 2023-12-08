@@ -18,6 +18,7 @@ namespace SpaceInvaders
         private int direction;
         private double speed;
         private double speedMultiplier;
+        private double randomShootProbability = 0.1;
 
         public Vecteur2D Position;
         public Size size;
@@ -102,11 +103,22 @@ namespace SpaceInvaders
             // Update enemy box size
             enemyships.RemoveWhere(gameObject => !gameObject.IsAlive());
             UpdateSize();
+                
+            Random rand = new Random();
 
             // Déplacement latéral
             Position.x += speed * deltaT * direction;
             foreach (SpaceShip ship in enemyships){
+                // Déplacement latéral
                 ship.Position.x += speed * deltaT * direction;
+
+                // Tir des enemis
+                double r = rand.NextDouble();
+                if (r <= randomShootProbability * deltaT)
+                {
+                    // Le 1 correspond à la direction vers le bas
+                    ship.Shoot(gameInstance, 1, Side.Enemy);
+                }
             }
 
             // Le block a atteint un bord
@@ -118,10 +130,11 @@ namespace SpaceInvaders
 
         public bool CollisionRectangle(Missile m)
         {
-            if (m.Position.x <= this.Position.x + this.size.Width // Le missile est en collision gauche de l'objet
-             && m.Position.x + m.Image.Width >= this.Position.x    // Le missile est en collision droite de l'objet
-             && m.Position.y + m.Image.Height >= this.Position.y   // Le missile est en collision haut de l'objet
-             && m.Position.y <= this.Position.y + this.size.Height)  // Le missile est en collision bas de l'objet
+            if (m.Position.x <= this.Position.x + this.size.Width   // Le missile est en collision gauche de l'objet
+             && m.Position.x + m.Image.Width >= this.Position.x     // Le missile est en collision droite de l'objet
+             && m.Position.y + m.Image.Height >= this.Position.y    // Le missile est en collision haut de l'objet
+             && m.Position.y <= this.Position.y + this.size.Height  // Le missile est en collision bas de l'objet
+             && m.Side != this.Side)                                // Le missile n'est pas dans le même camps que le vaisseau
             {
                 return true;
             }

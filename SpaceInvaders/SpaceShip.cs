@@ -27,7 +27,7 @@ namespace SpaceInvaders
 
         }
 
-        public void Shoot(Game gameInstance)
+        public void Shoot(Game gameInstance, int direction, Side side)
         {
             if (Missile == null || !Missile.IsAlive())
             {
