@@ -12,10 +12,14 @@ namespace SpaceInvaders
 {
     internal class PlayerSpaceship : SpaceShip
     {
+        private int MaxLives;
+        private int Bleed;
         public int Points;
 
         public PlayerSpaceship(Vecteur2D position, int lives) : base(position, lives, Properties.Resources.ship3, Side.Ally)
         {
+            MaxLives = lives;
+            Bleed = 0;
         }
 
         public override void Update(Game gameInstance, double deltaT)
@@ -38,20 +42,77 @@ namespace SpaceInvaders
                 // Le -1 correspond a la direction vers le haut
                 Shoot(gameInstance, -1, Side.Ally);
             }
+
+            // Saignement
+            if (Bleed > 0)
+            {
+                Bleed -= 1;
+                Lives -= 1;
+            }
+        }
+
+        protected override void OnCollision(Missile m, int numberOfPixelsInCollision)
+        {
+            int damage = Math.Min(m.Lives, this.Lives);
+
+            m.Lives = 0;
+
+            if (damage > Lives) // Si le missile tue le vaisseau
+            {
+                Bleed += Lives;
+            }
+            else // Si le missile le tue pas le vaisseau
+            {
+                Bleed += damage;
+            }
         }
 
         public override void Draw(Game gameInstance, Graphics graphics)
         {
             base.Draw(gameInstance, graphics);
-            PrivateFontCollection privateFontCollection = new PrivateFontCollection();
 
+            // Calcul des valeurs
+            double HPLenght;
+            HPLenght = ((double)Lives - (double)Bleed) / (double)MaxLives * 200;
+
+            double BleedLenght;
+            BleedLenght = (double)Bleed / (double)MaxLives * 200;
+
+            int percentHP;
+            percentHP = (int)((double)Lives / (double)MaxLives * 100);
+
+            // Style du texte
+            PrivateFontCollection privateFontCollection = new PrivateFontCollection();
             IntPtr fontBuffer = Marshal.UnsafeAddrOfPinnedArrayElement(Properties.Resources.space_invaders_font, 0);
             privateFontCollection.AddMemoryFont(fontBuffer, Properties.Resources.space_invaders_font.Length);
 
             SolidBrush brush = new SolidBrush(Color.White);
             Font font = new Font(privateFontCollection.Families[0], 12);
-            graphics.DrawString($"{Lives} lives remaining", font, brush, gameInstance.GameSize.Width /20, gameInstance.GameSize.Height*19/20);
+
+            StringFormat stringFormatRight = new StringFormat();
+            stringFormatRight.Alignment = StringAlignment.Far;
+
+            // POINTS
             graphics.DrawString($"{Points} Points", font, brush, gameInstance.GameSize.Width * 16 / 20, gameInstance.GameSize.Height * 19 / 20);
+
+            // BARRE DE VIE
+            graphics.DrawString($"{percentHP} %", font, brush, (gameInstance.GameSize.Width / 20) + 35, (gameInstance.GameSize.Height * 19 / 20), stringFormatRight);
+
+            Pen pen = new Pen(Color.Black, 2);
+            SolidBrush brushMaxHP = new SolidBrush(Color.Red);
+            SolidBrush brushCurrentHP = new SolidBrush(Color.Green);
+            SolidBrush brushBleedHP = new SolidBrush(Color.Orange);
+
+            graphics.DrawRectangle(pen, (gameInstance.GameSize.Width / 20) + 35, (gameInstance.GameSize.Height * 19 / 20) - 3, 200, 25); // Cadre
+
+            graphics.FillRectangle(brushMaxHP, (gameInstance.GameSize.Width / 20) + 35, (gameInstance.GameSize.Height * 19 / 20) - 3, 200, 24); // Barre rouge
+
+            if(Bleed > 0)
+            {
+                graphics.FillRectangle(brushBleedHP, (gameInstance.GameSize.Width / 20) + 35 + (int)HPLenght, (gameInstance.GameSize.Height * 19 / 20) - 3, (int)BleedLenght, 24); // Barre orange
+            }
+            graphics.FillRectangle(brushCurrentHP, (gameInstance.GameSize.Width / 20) + 35, (gameInstance.GameSize.Height * 19 / 20) - 3, (int)HPLenght, 24); // Barre verte
         }
     }
 }
+
