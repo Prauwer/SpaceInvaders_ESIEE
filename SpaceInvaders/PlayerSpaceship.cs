@@ -55,8 +55,17 @@ namespace SpaceInvaders
         protected override void OnCollision(Missile m, int numberOfPixelsInCollision)
         {
             int damage = Math.Min(m.Lives, this.Lives);
-            m.Lives -= damage;
-            Bleed += damage;
+
+            m.Lives = 0;
+
+            if (damage > Lives) // Si le missile tue le vaisseau
+            {
+                Bleed += Lives;
+            }
+            else // Si le missile le tue pas le vaisseau
+            {
+                Bleed += damage;
+            }
         }
 
         public override void Draw(Game gameInstance, Graphics graphics)
@@ -76,14 +85,24 @@ namespace SpaceInvaders
 
             // BARRE DE VIE !
             double HPLenght;
-            HPLenght = (double)Lives / (double)MaxLives * 200;
+            HPLenght = ((double)Lives-(double)Bleed) / (double)MaxLives * 200;
+
+            double BleedLenght;
+            BleedLenght = (double)Bleed / (double)MaxLives * 200;
 
             Pen pen = new Pen(Color.Black, 2);
             SolidBrush brushMaxHP = new SolidBrush(Color.Red);
             SolidBrush brushCurrentHP = new SolidBrush(Color.Green);
+            SolidBrush brushBleedHP = new SolidBrush(Color.Orange);
 
-            graphics.DrawRectangle(pen, (gameInstance.GameSize.Width / 20) + 50, (gameInstance.GameSize.Height * 19 / 20), 200, 25);
+            graphics.DrawRectangle(pen, (gameInstance.GameSize.Width / 20) + 50, (gameInstance.GameSize.Height * 19 / 20), 200, 25); // Cadre
+
             graphics.FillRectangle(brushMaxHP, (gameInstance.GameSize.Width / 20) + 50, (gameInstance.GameSize.Height * 19 / 20), 200, 24);
+
+            if(Bleed > 0)
+            {
+                graphics.FillRectangle(brushBleedHP, (gameInstance.GameSize.Width / 20) + 50 + (int)HPLenght, (gameInstance.GameSize.Height * 19 / 20), (int)BleedLenght, 24);
+            }
             graphics.FillRectangle(brushCurrentHP, (gameInstance.GameSize.Width / 20) + 50, (gameInstance.GameSize.Height * 19 / 20), (int)HPLenght, 24);
         }
     }
