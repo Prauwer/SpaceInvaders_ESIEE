@@ -56,6 +56,10 @@ namespace SpaceInvaders
         /// </summary>
         public EnemyBlock Enemies;
 
+        /// <summary>
+        ///  trigger for bunker deletion
+        /// </summary>
+        public Trigger trigger;
 
         /// <summary>
         ///  player's ship
@@ -153,6 +157,15 @@ namespace SpaceInvaders
         }
 
         // <summary>
+        // Bunker Trigger creation
+        // </summary>
+        private void TriggerCreation()
+        {
+            trigger = new Trigger(new Vecteur2D(0, gameSize.Height - 220), new Size(605, 10));
+            AddNewGameObject(this.trigger);
+        }
+
+        // <summary>
         // Player Space Ship creation
         // </summary>
         private void PlayerSpaceShipCreation()
@@ -175,6 +188,9 @@ namespace SpaceInvaders
                 Bunker bunker = new Bunker(Position);
                 AddNewGameObject(bunker);
             }
+          
+            // Création du trigger pour les bunkers
+            this.TriggerCreation();
         }
 
         private void ResetGame()
@@ -324,6 +340,7 @@ namespace SpaceInvaders
             {
                 gameObject.Update(this, deltaT);
             }
+             
 
             // remove dead objects
             gameObjects.RemoveWhere(gameObject => {

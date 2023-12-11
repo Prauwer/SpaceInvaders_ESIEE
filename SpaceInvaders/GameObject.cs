@@ -28,6 +28,11 @@ namespace SpaceInvaders
             this.Side = Side;
         }
 
+        public GameObject()
+        {
+            Side = Side.Neutral;
+        }
+
         /// <summary>
         /// Update the state of a game objet
         /// </summary>
