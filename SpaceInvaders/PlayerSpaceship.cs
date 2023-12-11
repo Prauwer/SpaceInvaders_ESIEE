@@ -49,6 +49,12 @@ namespace SpaceInvaders
                 Bleed -= 1;
                 Lives -= 1;
             }
+
+            // Mourir si le block ennemi dépasse le vaisseau
+            if ((Game.game.Enemies.Position.y + Game.game.Enemies.size.Height) > Position.y + Image.Height)
+            {
+                Lives = 0;
+            }
         }
 
         protected override void OnCollision(Missile m, int numberOfPixelsInCollision)
