@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -43,7 +44,10 @@ namespace SpaceInvaders
         {
             base.Draw(gameInstance, graphics);
             PrivateFontCollection privateFontCollection = new PrivateFontCollection();
-            privateFontCollection.AddFontFile("C:\\Users\\antoninmansour\\source\\repos\\projet-spaceinvaders2023-zackary-saada-antonin-mansour\\SpaceInvaders\\Resources\\space_invaders.ttf");
+
+            IntPtr fontBuffer = Marshal.UnsafeAddrOfPinnedArrayElement(Properties.Resources.space_invaders_font, 0);
+            privateFontCollection.AddMemoryFont(fontBuffer, Properties.Resources.space_invaders_font.Length);
+
             SolidBrush brush = new SolidBrush(Color.White);
             Font font = new Font(privateFontCollection.Families[0], 12);
             graphics.DrawString($"{Lives} lives remaining", font, brush, gameInstance.GameSize.Width /20, gameInstance.GameSize.Height*19/20);

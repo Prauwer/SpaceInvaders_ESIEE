@@ -29,7 +29,7 @@ namespace SpaceInvaders
 
         public override void Draw(Game gameInstance, Graphics graphics)
         {
-            Console.WriteLine(gameInstance.gameSize.Width);
+            Console.WriteLine(gameInstance.GameSize.Width);
             graphics.DrawImage(Image, (float)Position.x, (float)Position.y, Image.Width, Image.Height);
         }
 
@@ -40,7 +40,7 @@ namespace SpaceInvaders
 
         public override void Update(Game gameInstance, double deltaT)
         {
-            double lastEnemyPosY = Game.game.enemies.Position.y + Game.game.enemies.size.Height;
+            double lastEnemyPosY = Game.game.Enemies.Position.y + Game.game.Enemies.size.Height;
 
             if (lastEnemyPosY > Position.y)
             {

@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using System.Drawing.Text;
+using System.Runtime.InteropServices;
 
 namespace SpaceInvaders
 {
@@ -161,7 +162,7 @@ namespace SpaceInvaders
         // </summary>
         private void TriggerCreation()
         {
-            trigger = new Trigger(new Vecteur2D(0, gameSize.Height - 220), new Size(605, 10));
+            trigger = new Trigger(new Vecteur2D(0, GameSize.Height - 220), new Size(605, 10));
             AddNewGameObject(this.trigger);
         }
 
@@ -234,12 +235,14 @@ namespace SpaceInvaders
         /// <param name="g">Graphics to draw in</param>
         public void Draw(Graphics g)
         {
-            Image BackgroundImage = Image.FromFile("C:\\Users\\antoninmansour\\source\\repos\\projet-spaceinvaders2023-zackary-saada-antonin-mansour\\SpaceInvaders\\Resources\\background.jpeg");
+            Image BackgroundImage = Properties.Resources.background;
             Rectangle rectangle = new Rectangle(0, 0, GameSize.Width, GameSize.Height);
             g.DrawImage(BackgroundImage, rectangle);
             SolidBrush brush = new SolidBrush(Color.White);
             PrivateFontCollection privateFontCollection = new PrivateFontCollection();
-            privateFontCollection.AddFontFile("C:\\Users\\antoninmansour\\source\\repos\\projet-spaceinvaders2023-zackary-saada-antonin-mansour\\SpaceInvaders\\Resources\\space_invaders.ttf");
+            IntPtr fontBuffer = Marshal.UnsafeAddrOfPinnedArrayElement(Properties.Resources.space_invaders_font, 0);
+            privateFontCollection.AddMemoryFont(fontBuffer, Properties.Resources.space_invaders_font.Length);
+
             // Draw "PAUSE" in the windows if the game is in Pause state 
             if (State == GameStates.Pause) {
                 Font font = new Font(privateFontCollection.Families[0], 22);

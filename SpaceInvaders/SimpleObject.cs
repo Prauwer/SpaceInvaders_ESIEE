@@ -33,6 +33,13 @@ namespace SpaceInvaders
             return Lives > 0;
         }
 
+        public void playHit() // Play sound on ship getting hit
+        {
+            SoundPlayer soundPlayer = new SoundPlayer();
+            soundPlayer.Stream = Properties.Resources.shoot_sound;
+            soundPlayer.Play();
+        }
+
         public bool CollisionRectangle(Missile m)
         {
             if (m.Position.x <= this.Position.x + this.Image.Width // Le missile est en collision gauche de l'objet
@@ -86,8 +93,7 @@ namespace SpaceInvaders
                             }
                             else
                             {
-                                SoundPlayer soundPlayer = new SoundPlayer("C:\\Users\\antoninmansour\\source\\repos\\projet-spaceinvaders2023-zackary-saada-antonin-mansour\\SpaceInvaders\\Resources\\shoot.wav");
-                                soundPlayer.Play();
+                                playHit();
                             }
 
                             numberOfPixelsInCollision++;

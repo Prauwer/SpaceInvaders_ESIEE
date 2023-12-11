@@ -93,7 +93,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Resources\space_invaders.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shoot2.png" />
@@ -144,13 +143,14 @@
     <None Include="Resources\shoot1.png" />
   </ItemGroup>
   <ItemGroup>
-  <ItemGroup>
+    <None Include="Resources\space_invaders_font.ttf" />
     <None Include="Resources\Trigger.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\background.jpg" />
-    <Content Include="Resources\shootSound.mp3" />
+    <None Include="Resources\background.jpeg" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shoot_sound.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

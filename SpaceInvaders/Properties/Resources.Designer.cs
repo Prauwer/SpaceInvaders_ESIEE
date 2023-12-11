@@ -63,6 +63,16 @@ namespace SpaceInvaders.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap background {
+            get {
+                object obj = ResourceManager.GetObject("background", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap bonus {
             get {
                 object obj = ResourceManager.GetObject("bonus", resourceCulture);
@@ -181,6 +191,15 @@ namespace SpaceInvaders.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream shoot_sound {
+            get {
+                return ResourceManager.GetStream("shoot_sound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap shoot1 {
@@ -217,6 +236,16 @@ namespace SpaceInvaders.Properties {
             get {
                 object obj = ResourceManager.GetObject("shoot4", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] space_invaders_font {
+            get {
+                object obj = ResourceManager.GetObject("space_invaders_font", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
