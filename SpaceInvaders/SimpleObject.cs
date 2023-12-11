@@ -16,7 +16,9 @@ namespace SpaceInvaders
         }
 
         public Vecteur2D Position { get; protected set; }
-        public int Lives { get; set; } = 1;
+
+        public int Lives = 1;
+
         public Bitmap Image { get; protected set; }
 
         protected abstract void OnCollision(Missile m, int numberOfPixelsInCollision);

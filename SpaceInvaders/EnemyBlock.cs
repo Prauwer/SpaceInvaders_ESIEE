@@ -122,9 +122,9 @@ namespace SpaceInvaders
             }
 
             // Le block a atteint un bord
-            if (Position.x < 0 || (Position.x + size.Width) > gameInstance.gameSize.Width)
+            if (Position.x < 0 || (Position.x + size.Width) > gameInstance.GameSize.Width)
             {
-                MoveBlockDown(gameInstance.gameSize.Width);
+                MoveBlockDown(gameInstance.GameSize.Width);
             }
         }
 

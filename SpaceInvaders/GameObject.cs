@@ -19,6 +19,7 @@ namespace SpaceInvaders
     /// </summary>
     abstract class GameObject
     {
+        public int InitialLives;
 
         public Side Side { get; private set; }
         
