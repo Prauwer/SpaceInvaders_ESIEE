@@ -12,7 +12,6 @@ namespace SpaceInvaders
 {
     internal class PlayerSpaceship : SpaceShip
     {
-
         private int MaxLives;
         private int Bleed;
         public int Points;
@@ -116,3 +115,4 @@ namespace SpaceInvaders
         }
     }
 }
+
