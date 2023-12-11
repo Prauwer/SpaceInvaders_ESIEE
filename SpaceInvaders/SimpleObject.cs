@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,7 +16,9 @@ namespace SpaceInvaders
         }
 
         public Vecteur2D Position { get; protected set; }
-        public int Lives { get; set; } = 1;
+
+        public int Lives = 1;
+
         public Bitmap Image { get; protected set; }
 
         protected abstract void OnCollision(Missile m, int numberOfPixelsInCollision);
@@ -80,6 +83,11 @@ namespace SpaceInvaders
                             {
                                 Color newColor = Color.FromArgb(0, 0, 0, 0);
                                 Image.SetPixel((int)xBunker, (int)yBunker, newColor);
+                            }
+                            else
+                            {
+                                SoundPlayer soundPlayer = new SoundPlayer("C:\\Users\\antoninmansour\\source\\repos\\projet-spaceinvaders2023-zackary-saada-antonin-mansour\\SpaceInvaders\\Resources\\shoot.wav");
+                                soundPlayer.Play();
                             }
 
                             numberOfPixelsInCollision++;

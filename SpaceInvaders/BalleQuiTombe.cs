@@ -69,7 +69,7 @@ namespace SpaceInvaders
             y += ballSpeed * deltaT;
 
             // Destruction de l'objet si mort
-            if (y > gameInstance.gameSize.Height)
+            if (y > gameInstance.GameSize.Height)
                 alive = false;
 
         }

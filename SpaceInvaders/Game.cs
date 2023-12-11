@@ -5,6 +5,8 @@ using System.Text;
 using System.Drawing;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
+using System.Drawing.Text;
 
 namespace SpaceInvaders
 {
@@ -25,6 +27,8 @@ namespace SpaceInvaders
             Initial,
             Play,
             Pause,
+            Win,
+            Lost,
         }
 
         public GameStates State;
@@ -50,7 +54,7 @@ namespace SpaceInvaders
         /// <summary>
         ///  enemy ship block
         /// </summary>
-        public EnemyBlock enemies;
+        public EnemyBlock Enemies;
 
         /// <summary>
         ///  trigger for bunker deletion
@@ -60,12 +64,12 @@ namespace SpaceInvaders
         /// <summary>
         ///  player's ship
         /// </summary>
-        public PlayerSpaceship playerShip;
+        public PlayerSpaceship PlayerShip;
 
         /// <summary>
         /// Size of the game area
         /// </summary>
-        public Size gameSize;
+        public Size GameSize;
 
         /// <summary>
         /// State of the keyboard
@@ -113,43 +117,100 @@ namespace SpaceInvaders
         /// <param name="gameSize">Size of the game area</param>
         private Game(Size gameSize)
         {
-            this.gameSize = gameSize;
+            this.GameSize = gameSize;
 
             // Création du bloc d'ennemis
+            this.EnemiesBlockCreation();
 
+            // Creation du vaisseau
+            this.PlayerSpaceShipCreation();
+
+            // Création des bunkers
+            this.BunkersCreation();
+        }
+
+        #endregion
+
+        #region methods
+
+
+        // <summary>
+        // EnemiesBlock creation
+        // </summary>
+        private void EnemiesBlockCreation()
+        {
             int enemyBlockOffsetX = 80;
             int enemyBlockOffsetY = Properties.Resources.ship6.Height;
-            this.enemies = new EnemyBlock(new Vecteur2D(enemyBlockOffsetX,enemyBlockOffsetY),gameSize.Width-enemyBlockOffsetX*2);
+            this.Enemies = new EnemyBlock(new Vecteur2D(enemyBlockOffsetX, enemyBlockOffsetY), GameSize.Width - enemyBlockOffsetX * 2);
 
-            enemies.AddLine(1, 50, Properties.Resources.ship6);
-            enemies.AddLine(2, 20, Properties.Resources.ship7);
-            enemies.AddLine(5, 10, Properties.Resources.ship1);
-            enemies.AddLine(6, 10, Properties.Resources.ship4);
-            enemies.AddLine(7, 10, Properties.Resources.ship2);
+            Enemies.AddLine(1, 50, Properties.Resources.ship6);
+            Enemies.AddLine(2, 30, Properties.Resources.ship7);
+            Enemies.AddLine(5, 20, Properties.Resources.ship1);
+            Enemies.AddLine(6, 20, Properties.Resources.ship4);
+            Enemies.AddLine(7, 20, Properties.Resources.ship2);
 
-            AddNewGameObject(this.enemies);
-            foreach (SpaceShip enemyship in enemies.enemyships)
+            AddNewGameObject(this.Enemies);
+            foreach (SpaceShip enemyship in Enemies.enemyships)
             {
                 AddNewGameObject(enemyship);
             }
+        }
 
-            // Creation du trigger
+        // <summary>
+        // Bunker Trigger creation
+        // </summary>
+        private void TriggerCreation()
+        {
             trigger = new Trigger(new Vecteur2D(0, gameSize.Height - 220), new Size(605, 10));
             AddNewGameObject(this.trigger);
+        }
 
+        // <summary>
+        // Player Space Ship creation
+        // </summary>
+        private void PlayerSpaceShipCreation()
+        {
+            this.PlayerShip = new PlayerSpaceship(new Vecteur2D(0, 0), 150);
+            PlayerShip.Position.x = (GameSize.Width / 2) - PlayerShip.Image.Width / 2;
+            PlayerShip.Position.y = GameSize.Height - 100;
+            AddNewGameObject(this.PlayerShip);
+        }
 
-            // Creation du vaisseau
-            this.playerShip = new PlayerSpaceship(new Vecteur2D(0,0), 300);
-            playerShip.Position.x = (gameSize.Width / 2) - playerShip.Image.Width / 2;
-            playerShip.Position.y = gameSize.Height - 100;
-            AddNewGameObject(this.playerShip);
-
-            for (int i = 0; i < 3; i++) {
+        // <summary>
+        // Bunkers creation
+        // </summary>
+        private void BunkersCreation()
+        {
+            for (int i = 0; i < 3; i++)
+            {
                 int imageWidth = Properties.Resources.bunker.Width;
-                Vecteur2D Position = new Vecteur2D((gameSize.Width) / 3 * (i + 1) - (gameSize.Width/6 + imageWidth/2), gameSize.Height - 200);
+                Vecteur2D Position = new Vecteur2D((GameSize.Width) / 3 * (i + 1) - (GameSize.Width / 6 + imageWidth / 2), GameSize.Height - 200);
                 Bunker bunker = new Bunker(Position);
                 AddNewGameObject(bunker);
             }
+          
+            // Création du trigger pour les bunkers
+            this.TriggerCreation();
+        }
+
+        private void ResetGame()
+        {
+            // Suppression tous les objets du jeu
+            this.PlayerShip = null;
+            this.Enemies = null;
+            this.gameObjects.Clear();
+
+            // Création du bloc d'ennemis
+            this.EnemiesBlockCreation();
+
+            // Creation du vaisseau
+            this.PlayerSpaceShipCreation();
+
+            // Création des bunkers
+            this.BunkersCreation();
+
+            State = GameStates.Play;
+
         }
 
         #endregion
@@ -173,24 +234,38 @@ namespace SpaceInvaders
         /// <param name="g">Graphics to draw in</param>
         public void Draw(Graphics g)
         {
+            Image BackgroundImage = Image.FromFile("C:\\Users\\antoninmansour\\source\\repos\\projet-spaceinvaders2023-zackary-saada-antonin-mansour\\SpaceInvaders\\Resources\\background.jpeg");
+            Rectangle rectangle = new Rectangle(0, 0, GameSize.Width, GameSize.Height);
+            g.DrawImage(BackgroundImage, rectangle);
+            SolidBrush brush = new SolidBrush(Color.White);
+            PrivateFontCollection privateFontCollection = new PrivateFontCollection();
+            privateFontCollection.AddFontFile("C:\\Users\\antoninmansour\\source\\repos\\projet-spaceinvaders2023-zackary-saada-antonin-mansour\\SpaceInvaders\\Resources\\space_invaders.ttf");
             // Draw "PAUSE" in the windows if the game is in Pause state 
             if (State == GameStates.Pause) {
-                Font font = new Font("Arial", 24);
-                SolidBrush brush = new SolidBrush(Color.Black);
-                g.DrawString("PAUSE", font, brush, gameSize.Width / 2 - 60, gameSize.Height / 2 - 24);
+                Font font = new Font(privateFontCollection.Families[0], 22);
+                g.DrawString("PAUSE", font, brush, GameSize.Width / 2 - 40, GameSize.Height / 2 - 24);
 
             }
+            else if (State == GameStates.Lost)
+            {
+                Font font = new Font(privateFontCollection.Families[0], 16);
+                g.DrawString($"YOU LOOSE ! (press <space> to retry)\n{PlayerShip.Points} Points", font, brush, GameSize.Width / 2 - 240, GameSize.Height / 2 - 24);
+            }
+            else if (State == GameStates.Win)
+            {
+                Font font = new Font(privateFontCollection.Families[0], 16);
+                g.DrawString($"YOU WIN ! (press <space> to retry)\n{PlayerShip.Points} Points", font, brush, GameSize.Width / 2 - 240, GameSize.Height / 2 - 24);
+            }
 
-            if (State != GameStates.Initial)
+            else if (State != GameStates.Initial)
             {
                 foreach (GameObject gameObject in gameObjects)
                     gameObject.Draw(this, g);
             }
             else
             {
-                Font font = new Font("Arial", 16);
-                SolidBrush brush = new SolidBrush(Color.Black);
-                g.DrawString("Appuyez sur Entrée pour continuer", font, brush, gameSize.Width / 2 - 180, gameSize.Height / 2 - 24);
+                Font font = new Font(privateFontCollection.Families[0], 14);
+                g.DrawString("PRESS <ENTER> TO START", font, brush, GameSize.Width / 2 - 140, GameSize.Height / 2 - 24);
             }
         }
 
@@ -203,16 +278,16 @@ namespace SpaceInvaders
             gameObjects.UnionWith(pendingNewGameObjects);
             pendingNewGameObjects.Clear();
           
-            // if space is pressed DEBUG SPAWN BALLE QUI TOMBE
-            if (keyPressed.Contains(Keys.Space))
-            {
-                // create new BalleQuiTombe
-                GameObject newObject = new BalleQuiTombe(gameSize.Width / 2, 0);
-                // add it to the game
-                AddNewGameObject(newObject);
-                // release key space (no autofire)
-                ReleaseKey(Keys.Space);
-            }
+            //// if space is pressed DEBUG SPAWN BALLE QUI TOMBE
+            //if (keyPressed.Contains(Keys.Space))
+            //{
+            //    // create new BalleQuiTombe
+            //    GameObject newObject = new BalleQuiTombe(gameSize.Width / 2, 0);
+            //    // add it to the game
+            //    AddNewGameObject(newObject);
+            //    // release key space (no autofire)
+            //    ReleaseKey(Keys.Space);
+            //}
 
             //launch the game when Enter is pressed
             if (keyPressed.Contains(Keys.Enter) && State == GameStates.Initial)
@@ -221,10 +296,10 @@ namespace SpaceInvaders
                 ReleaseKey(Keys.Enter);
             }
             //DEBUG SPAWN MISSILE
-            if (keyPressed.Contains(Keys.Down))
+            else if (keyPressed.Contains(Keys.Down))
             {
                 // create new BalleQuiTombe
-                GameObject newObject = new Missile(new Vecteur2D(playerShip.Position.x, 0), 100, 150, Properties.Resources.shoot2, Side.Neutral);
+                GameObject newObject = new Missile(new Vecteur2D(PlayerShip.Position.x, 0), 100, 150, Properties.Resources.shoot2, Side.Neutral);
                 // add it to the game
                 AddNewGameObject(newObject);
                 // release key space (no autofire)
@@ -242,12 +317,23 @@ namespace SpaceInvaders
                 State = GameStates.Pause;
                 ReleaseKey(Keys.P);
             }
-            else if (State != GameStates.Play)
+            //Don't update the gameOjects if the game is in Pause's state
+            else if (State == GameStates.Pause || State == GameStates.Initial)
             {
                 return;
             }
+            else if (!Enemies.enemyships.Any() && State != GameStates.Win)
+            {
+                State = GameStates.Win;
+            }
+            else if (!PlayerShip.IsAlive() && State != GameStates.Lost)
+            {
+                State = GameStates.Lost;
+            }
+            else if (keyPressed.Contains(Keys.Space) && ( State == GameStates.Lost || State == GameStates.Win)){
+                this.ResetGame();
+            }
 
-            //Don't update the gameOjects if the game is in Pause's state
 
             // update each game object
             foreach (GameObject gameObject in gameObjects)
@@ -257,7 +343,14 @@ namespace SpaceInvaders
              
 
             // remove dead objects
-            gameObjects.RemoveWhere(gameObject => !gameObject.IsAlive());
+            gameObjects.RemoveWhere(gameObject => {
+                if(!gameObject.IsAlive() && gameObject.GetType() == typeof(SpaceShip))
+                {
+                    PlayerShip.Points += gameObject.InitialLives;
+                }
+                return !gameObject.IsAlive();
+            }
+            );
         }
         #endregion
     }

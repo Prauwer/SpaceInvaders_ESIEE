@@ -11,8 +11,6 @@ namespace SpaceInvaders
 {
     internal class SpaceShip : SimpleObject
     {
-
-        private double speedPixelPerSecond = 2.0;
         public Missile Missile { get; private set; }
 
         public SpaceShip(Vecteur2D position, int lives, Bitmap image, Side side): base(side)
@@ -20,6 +18,7 @@ namespace SpaceInvaders
             Position = position;
             Lives = lives;
             Image = image;
+            InitialLives = lives;
         }
 
         public override void Update(Game gameInstance, double deltaT)
@@ -33,7 +32,7 @@ namespace SpaceInvaders
             {
                 Bitmap missileImage = Properties.Resources.shoot1;
 
-                Missile = new Missile(new Vecteur2D(Position.x + Image.Width / 2 - missileImage.Width/2, Position.y), direction*400, 17, missileImage, side);
+                Missile = new Missile(new Vecteur2D(Position.x + Image.Width / 2 - missileImage.Width/2, Position.y), direction*400, 20, missileImage, side);
 
 
                 gameInstance.AddNewGameObject(Missile);
