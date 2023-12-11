@@ -52,6 +52,9 @@ namespace SpaceInvaders
         /// </summary>
         public EnemyBlock enemies;
 
+        /// <summary>
+        ///  trigger for bunker deletion
+        /// </summary>
         public Trigger trigger;
 
         /// <summary>
@@ -131,12 +134,11 @@ namespace SpaceInvaders
             }
 
             // Creation du trigger
-            trigger = new Trigger(new Vecteur2D(0, 0), new Size(605, 100));
+            trigger = new Trigger(new Vecteur2D(0, gameSize.Height - 220), new Size(605, 10));
             AddNewGameObject(this.trigger);
 
 
             // Creation du vaisseau
-
             this.playerShip = new PlayerSpaceship(new Vecteur2D(0,0), 300);
             playerShip.Position.x = (gameSize.Width / 2) - playerShip.Image.Width / 2;
             playerShip.Position.y = gameSize.Height - 100;

@@ -12,12 +12,14 @@ namespace SpaceInvaders
         public Vecteur2D Position { get; protected set; }
         public Size Size { get; protected set; }
         public Image Image { get; protected set; }
+        public bool isTriggered { get; protected set; }
 
         public Trigger(Vecteur2D position, Size size)
         {
             Position = position;
             Size = size;
             Image = Properties.Resources.Trigger;
+            isTriggered = false;
         }
 
         public override void Collision(Missile m)
@@ -33,11 +35,22 @@ namespace SpaceInvaders
 
         public override bool IsAlive()
         {
-            return true;
+            return !isTriggered;
         }
 
         public override void Update(Game gameInstance, double deltaT)
         {
+            double lastEnemyPosY = Game.game.enemies.Position.y + Game.game.enemies.size.Height;
+
+            if (lastEnemyPosY > Position.y)
+            {
+                isTriggered = true;
+                foreach (SimpleObject bunker in Game.game.gameObjects.OfType<Bunker>())
+                {
+                    bunker.Lives = 0;
+                }
+            }
+
             //throw new NotImplementedException();
         }
     }
