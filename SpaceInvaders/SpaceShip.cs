@@ -18,6 +18,7 @@ namespace SpaceInvaders
             Position = position;
             Lives = lives;
             Image = image;
+            InitialLives = lives;
         }
 
         public override void Update(Game gameInstance, double deltaT)

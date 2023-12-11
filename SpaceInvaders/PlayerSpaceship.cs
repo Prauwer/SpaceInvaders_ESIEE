@@ -11,6 +11,8 @@ namespace SpaceInvaders
 {
     internal class PlayerSpaceship : SpaceShip
     {
+        public int Points;
+
         public PlayerSpaceship(Vecteur2D position, int lives) : base(position, lives, Properties.Resources.ship3, Side.Ally)
         {
         }
@@ -23,7 +25,7 @@ namespace SpaceInvaders
             {
                 Position.x -= 2.0;
             }
-            if (gameInstance.keyPressed.Contains(Keys.Right) && Position.x + Image.Size.Width <= gameInstance.gameSize.Width)
+            if (gameInstance.keyPressed.Contains(Keys.Right) && Position.x + Image.Size.Width <= gameInstance.GameSize.Width)
             {
                 Position.x += 2.0;
             }
@@ -44,7 +46,8 @@ namespace SpaceInvaders
             privateFontCollection.AddFontFile("C:\\Users\\antoninmansour\\source\\repos\\projet-spaceinvaders2023-zackary-saada-antonin-mansour\\SpaceInvaders\\Resources\\space_invaders.ttf");
             SolidBrush brush = new SolidBrush(Color.White);
             Font font = new Font(privateFontCollection.Families[0], 12);
-            graphics.DrawString($"{Lives} vies restantes", font, brush, gameInstance.gameSize.Width /20, gameInstance.gameSize.Height*19/20);
+            graphics.DrawString($"{Lives} lives remaining", font, brush, gameInstance.GameSize.Width /20, gameInstance.GameSize.Height*19/20);
+            graphics.DrawString($"{Points} Points", font, brush, gameInstance.GameSize.Width * 16 / 20, gameInstance.GameSize.Height * 19 / 20);
         }
     }
 }
