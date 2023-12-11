@@ -19,12 +19,18 @@ namespace SpaceInvaders
     /// </summary>
     abstract class GameObject
     {
+        public int InitialLives;
 
         public Side Side { get; private set; }
         
         public GameObject(Side Side)
         {
             this.Side = Side;
+        }
+
+        public GameObject()
+        {
+            Side = Side.Neutral;
         }
 
         /// <summary>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,7 +16,9 @@ namespace SpaceInvaders
         }
 
         public Vecteur2D Position { get; protected set; }
-        public int Lives { get; set; } = 1;
+
+        public int Lives = 1;
+
         public Bitmap Image { get; protected set; }
 
         protected abstract void OnCollision(Missile m, int numberOfPixelsInCollision);
@@ -28,6 +31,13 @@ namespace SpaceInvaders
         public override bool IsAlive()
         {
             return Lives > 0;
+        }
+
+        public void playHit() // Play sound on ship getting hit
+        {
+            SoundPlayer soundPlayer = new SoundPlayer();
+            soundPlayer.Stream = Properties.Resources.shoot_sound;
+            soundPlayer.Play();
         }
 
         public bool CollisionRectangle(Missile m)
@@ -80,6 +90,10 @@ namespace SpaceInvaders
                             {
                                 Color newColor = Color.FromArgb(0, 0, 0, 0);
                                 Image.SetPixel((int)xBunker, (int)yBunker, newColor);
+                            }
+                            else
+                            {
+                                playHit();
                             }
 
                             numberOfPixelsInCollision++;

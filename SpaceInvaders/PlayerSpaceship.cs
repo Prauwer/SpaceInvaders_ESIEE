@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -10,6 +12,8 @@ namespace SpaceInvaders
 {
     internal class PlayerSpaceship : SpaceShip
     {
+        public int Points;
+
         public PlayerSpaceship(Vecteur2D position, int lives) : base(position, lives, Properties.Resources.ship3, Side.Ally)
         {
         }
@@ -22,7 +26,7 @@ namespace SpaceInvaders
             {
                 Position.x -= 2.0;
             }
-            if (gameInstance.keyPressed.Contains(Keys.Right) && Position.x + Image.Size.Width <= gameInstance.gameSize.Width)
+            if (gameInstance.keyPressed.Contains(Keys.Right) && Position.x + Image.Size.Width <= gameInstance.GameSize.Width)
             {
                 Position.x += 2.0;
             }
@@ -31,16 +35,23 @@ namespace SpaceInvaders
             // Tirer un missile
             if (gameInstance.keyPressed.Contains(Keys.Up))
             {
-                Shoot(gameInstance);
+                // Le -1 correspond a la direction vers le haut
+                Shoot(gameInstance, -1, Side.Ally);
             }
         }
 
         public override void Draw(Game gameInstance, Graphics graphics)
         {
             base.Draw(gameInstance, graphics);
-            Font font = new Font("Arial", 12);
-            SolidBrush brush = new SolidBrush(Color.Black);
-            graphics.DrawString($"{Lives} vies restantes", font, brush, gameInstance.gameSize.Width /20, gameInstance.gameSize.Height*19/20);
+            PrivateFontCollection privateFontCollection = new PrivateFontCollection();
+
+            IntPtr fontBuffer = Marshal.UnsafeAddrOfPinnedArrayElement(Properties.Resources.space_invaders_font, 0);
+            privateFontCollection.AddMemoryFont(fontBuffer, Properties.Resources.space_invaders_font.Length);
+
+            SolidBrush brush = new SolidBrush(Color.White);
+            Font font = new Font(privateFontCollection.Families[0], 12);
+            graphics.DrawString($"{Lives} lives remaining", font, brush, gameInstance.GameSize.Width /20, gameInstance.GameSize.Height*19/20);
+            graphics.DrawString($"{Points} Points", font, brush, gameInstance.GameSize.Width * 16 / 20, gameInstance.GameSize.Height * 19 / 20);
         }
     }
 }
