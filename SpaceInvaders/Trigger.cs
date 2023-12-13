@@ -29,7 +29,6 @@ namespace SpaceInvaders
 
         public override void Draw(Game gameInstance, Graphics graphics)
         {
-            Console.WriteLine(gameInstance.GameSize.Width);
             graphics.DrawImage(Image, (float)Position.x, (float)Position.y, Image.Width, Image.Height);
         }
 

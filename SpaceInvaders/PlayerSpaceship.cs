@@ -59,13 +59,13 @@ namespace SpaceInvaders
 
         protected override void OnCollision(Missile m, int numberOfPixelsInCollision)
         {
-            int damage = Math.Min(m.Lives, this.Lives);
+            int damage = m.Lives; // Dégâts du missile correspond à son nombre de vies
 
-            m.Lives = 0;
+            m.Lives = 0; // Le missile ennemi est détruit à l'impact
 
-            if (damage > Lives) // Si le missile tue le vaisseau
+            if (damage >= Lives) // Si le missile tue le vaisseau
             {
-                Bleed += Lives;
+                Bleed = Lives;
             }
             else // Si le missile le tue pas le vaisseau
             {
