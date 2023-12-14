@@ -67,10 +67,8 @@ namespace SpaceInvaders
             }
         }
 
-        public override void Draw(Game gameInstance, Graphics graphics) // DEBUG
+        public override void Draw(Game gameInstance, Graphics graphics)
         {
-            //Pen pen = new Pen(Color.Red, 2);
-            //graphics.DrawRectangle(pen, (int)Position.x, (int)Position.y, size.Width, size.Height);
         }
 
         public override bool IsAlive()
