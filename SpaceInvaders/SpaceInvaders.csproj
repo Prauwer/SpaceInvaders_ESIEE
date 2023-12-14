@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bonus.cs" />
     <Compile Include="Bunker.cs" />
     <Compile Include="EnemyBlock.cs" />
     <Compile Include="Form1.cs">
@@ -59,11 +60,10 @@
     </Compile>
     <Compile Include="Game.cs" />
     <Compile Include="GameObject.cs" />
-    <Compile Include="Missile.cs" />
+    <Compile Include="Projectile.cs" />
     <Compile Include="PlayerSpaceship.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BalleQuiTombe.cs" />
     <Compile Include="SimpleObject.cs" />
     <Compile Include="Vecteur2D.cs" />
     <Compile Include="SpaceShip.cs" />

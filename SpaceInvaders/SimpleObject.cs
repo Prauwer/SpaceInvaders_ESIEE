@@ -21,7 +21,7 @@ namespace SpaceInvaders
 
         public Bitmap Image { get; protected set; }
 
-        protected abstract void OnCollision(Missile m, int numberOfPixelsInCollision);
+        protected abstract void OnCollision(Projectile m, int numberOfPixelsInCollision);
 
         public override void Draw(Game gameInstance, Graphics graphics)
         {
@@ -33,12 +33,12 @@ namespace SpaceInvaders
             return Lives > 0;
         }
 
-        public bool CollisionRectangle(Missile m)
+        public bool CollisionRectangle(Projectile p)
         {
-            if (m.Position.x <= this.Position.x + this.Image.Width // Le missile est en collision gauche de l'objet
-             && m.Position.x + m.Image.Width >= this.Position.x    // Le missile est en collision droite de l'objet
-             && m.Position.y + m.Image.Height >= this.Position.y   // Le missile est en collision haut de l'objet
-             && m.Position.y <= this.Position.y + this.Image.Height)  // Le missile est en collision bas de l'objet
+            if (p.Position.x <= this.Position.x + this.Image.Width // Le missile est en collision gauche de l'objet
+             && p.Position.x + p.Image.Width >= this.Position.x    // Le missile est en collision droite de l'objet
+             && p.Position.y + p.Image.Height >= this.Position.y   // Le missile est en collision haut de l'objet
+             && p.Position.y <= this.Position.y + this.Image.Height)  // Le missile est en collision bas de l'objet
             {
                 return true;
             }
@@ -48,26 +48,26 @@ namespace SpaceInvaders
             }
         }
 
-        public override void Collision(Missile m)
+        public override void Collision(Projectile p)
         {
-            if (CollisionRectangle(m) && this.Side!=m.Side)
+            if (CollisionRectangle(p) && (this.Side!=p.Side && (p.Side != Side.Bonus || (this.Side == Side.Ally && p.Side == Side.Bonus))))
             {
                 int numberOfPixelsInCollision = 0;
 
 
-                for (int y = 0; y < m.Image.Height; y++)
+                for (int y = 0; y < p.Image.Height; y++)
                 {
-                    for (int x = 0; x < m.Image.Width; x++)
+                    for (int x = 0; x < p.Image.Width; x++)
                     {
-                        Color currentPixelColor = m.Image.GetPixel(x, y);
+                        Color currentPixelColor = p.Image.GetPixel(x, y);
 
                         if (currentPixelColor.A == 0)
                         {
                             continue;
                         }
 
-                        double xBunker = m.Position.x + x - Position.x;
-                        double yBunker = m.Position.y + y - Position.y;
+                        double xBunker = p.Position.x + x - Position.x;
+                        double yBunker = p.Position.y + y - Position.y;
 
                         if (xBunker < 0 || xBunker >= Image.Width
                             || yBunker < 0 || yBunker >= Image.Height)
@@ -96,7 +96,7 @@ namespace SpaceInvaders
                 }
                 if (numberOfPixelsInCollision> 0)
                 {
-                    OnCollision(m, numberOfPixelsInCollision);
+                    OnCollision(p, numberOfPixelsInCollision);
                 }
             }
         }

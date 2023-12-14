@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace SpaceInvaders
 {
-    internal class Missile : SimpleObject
+    internal class Projectile : SimpleObject
     {
         //Attributs
        
         public double Speed { get; private set; }
 
         //Constructeur
-        public Missile(Vecteur2D position, double speed, int lives, Bitmap image, Side side): base(side)
+        public Projectile(Vecteur2D position, double speed, int lives, Bitmap image, Side side): base(side)
         {
             Position = position;
             Speed = speed;
@@ -44,9 +44,9 @@ namespace SpaceInvaders
             }
         }
 
-        protected override void OnCollision(Missile m, int numberOfPixelsInCollision)
+        protected override void OnCollision(Projectile p, int numberOfPixelsInCollision)
         {
-            m.Lives = 0;
+            p.Lives = 0;
             this.Lives = 0;
         }
     }

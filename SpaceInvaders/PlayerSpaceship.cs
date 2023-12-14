@@ -49,5 +49,18 @@ namespace SpaceInvaders
             graphics.DrawString($"{Lives} lives remaining", font, brush, gameInstance.GameSize.Width /20, gameInstance.GameSize.Height*19/20);
             graphics.DrawString($"{Points} Points", font, brush, gameInstance.GameSize.Width * 16 / 20, gameInstance.GameSize.Height * 19 / 20);
         }
+
+        protected override void OnCollision(Projectile p, int numberOfPixelsInCollision)
+        {
+            if (p.GetType() ==  typeof(Bonus)) {
+                p.Lives = 0;
+            }
+            else
+            {
+                int damage = Math.Min(p.Lives, this.Lives);
+                p.Lives -= damage;
+                this.Lives -= damage;
+            }
+        }
     }
 }

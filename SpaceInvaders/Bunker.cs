@@ -23,7 +23,7 @@ namespace SpaceInvaders
             return;
         }
 
-        protected override void OnCollision(Missile m, int numberOfPixelsInCollision)
+        protected override void OnCollision(Projectile m, int numberOfPixelsInCollision)
         {
             m.Lives -= numberOfPixelsInCollision;
         }
