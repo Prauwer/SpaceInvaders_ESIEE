@@ -87,6 +87,11 @@ namespace SpaceInvaders
         public static Game game { get; private set; }
 
         /// <summary>
+        /// Singleton for easy access
+        /// </summary>
+        public static Menu menu { get; private set; }
+
+        /// <summary>
         /// A shared black brush
         /// </summary>
         private static Brush blackBrush = new SolidBrush(Color.Black);
@@ -119,6 +124,9 @@ namespace SpaceInvaders
         private Game(Size gameSize)
         {
             this.GameSize = gameSize;
+
+            // Création du menu
+            menu = Menu.CreateMenu(this);
 
             // Création du bloc d'ennemis
             this.EnemiesBlockCreation();
@@ -235,41 +243,7 @@ namespace SpaceInvaders
         /// <param name="g">Graphics to draw in</param>
         public void Draw(Graphics g)
         {
-            Image BackgroundImage = Properties.Resources.background;
-            Rectangle rectangle = new Rectangle(0, 0, GameSize.Width, GameSize.Height);
-            g.DrawImage(BackgroundImage, rectangle);
-            SolidBrush brush = new SolidBrush(Color.White);
-            PrivateFontCollection privateFontCollection = new PrivateFontCollection();
-            IntPtr fontBuffer = Marshal.UnsafeAddrOfPinnedArrayElement(Properties.Resources.space_invaders_font, 0);
-            privateFontCollection.AddMemoryFont(fontBuffer, Properties.Resources.space_invaders_font.Length);
-
-            // Draw "PAUSE" in the windows if the game is in Pause state 
-            if (State == GameStates.Pause) {
-                Font font = new Font(privateFontCollection.Families[0], 22);
-                g.DrawString("PAUSE", font, brush, GameSize.Width / 2 - 40, GameSize.Height / 2 - 24);
-
-            }
-            else if (State == GameStates.Lost)
-            {
-                Font font = new Font(privateFontCollection.Families[0], 16);
-                g.DrawString($"YOU LOOSE ! (press <space> to retry)\n{PlayerShip.Points} Points", font, brush, GameSize.Width / 2 - 240, GameSize.Height / 2 - 24);
-            }
-            else if (State == GameStates.Win)
-            {
-                Font font = new Font(privateFontCollection.Families[0], 16);
-                g.DrawString($"YOU WIN ! (press <space> to retry)\n{PlayerShip.Points} Points", font, brush, GameSize.Width / 2 - 240, GameSize.Height / 2 - 24);
-            }
-
-            else if (State != GameStates.Initial)
-            {
-                foreach (GameObject gameObject in gameObjects)
-                    gameObject.Draw(this, g);
-            }
-            else
-            {
-                Font font = new Font(privateFontCollection.Families[0], 14);
-                g.DrawString("PRESS <ENTER> TO START", font, brush, GameSize.Width / 2 - 140, GameSize.Height / 2 - 24);
-            }
+            menu.UpdateMenu(g);
         }
 
         /// <summary>

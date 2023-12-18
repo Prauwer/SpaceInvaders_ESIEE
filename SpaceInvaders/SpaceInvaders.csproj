@@ -59,6 +59,7 @@
     </Compile>
     <Compile Include="Game.cs" />
     <Compile Include="GameObject.cs" />
+    <Compile Include="Menu.cs" />
     <Compile Include="Missile.cs" />
     <Compile Include="PlayerSpaceship.cs" />
     <Compile Include="Program.cs" />
