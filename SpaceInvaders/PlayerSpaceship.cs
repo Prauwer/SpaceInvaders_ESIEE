@@ -119,6 +119,19 @@ namespace SpaceInvaders
             }
             graphics.FillRectangle(brushCurrentHP, (gameInstance.GameSize.Width / 20) + 35, (gameInstance.GameSize.Height * 19 / 20) - 3, (int)HPLenght, 24); // Barre verte
         }
+
+        protected override void OnCollision(Projectile p, int numberOfPixelsInCollision)
+        {
+            if (p.GetType() ==  typeof(Bonus)) {
+                p.Lives = 0;
+            }
+            else
+            {
+                int damage = Math.Min(p.Lives, this.Lives);
+                p.Lives -= damage;
+                this.Lives -= damage;
+            }
+        }
     }
 }
 

@@ -126,7 +126,7 @@ namespace SpaceInvaders
             }
         }
 
-        public bool CollisionRectangle(Missile m)
+        public bool CollisionRectangle(Projectile m)
         {
             if (m.Position.x <= this.Position.x + this.size.Width   // Le missile est en collision gauche de l'objet
              && m.Position.x + m.Image.Width >= this.Position.x     // Le missile est en collision droite de l'objet
@@ -141,7 +141,7 @@ namespace SpaceInvaders
                 return false;
             }
         }
-        public override void Collision(Missile m)
+        public override void Collision(Projectile m)
         {
             if (CollisionRectangle(m))
             {
