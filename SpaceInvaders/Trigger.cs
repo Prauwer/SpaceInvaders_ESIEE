@@ -22,9 +22,9 @@ namespace SpaceInvaders
             isTriggered = false;
         }
 
-        public override void Collision(Missile m)
+        public override void Collision(Projectile p)
         {
-            //throw new NotImplementedException();
+            
         }
 
         public override void Draw(Game gameInstance, Graphics graphics)
@@ -50,7 +50,6 @@ namespace SpaceInvaders
                 }
             }
 
-            //throw new NotImplementedException();
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SpaceInvaders
 {
@@ -32,7 +33,7 @@ namespace SpaceInvaders
             {
                 Bitmap missileImage = Properties.Resources.shoot1;
 
-                Missile = new Projectile(new Vecteur2D(Position.x + Image.Width / 2 - missileImage.Width/2, Position.y), direction*400, 20, missileImage, side);
+                Missile = new Missile(new Vecteur2D(Position.x + Image.Width / 2 - missileImage.Width/2, Position.y), direction*400, 20, missileImage, side);
 
 
                 gameInstance.AddNewGameObject(Missile);

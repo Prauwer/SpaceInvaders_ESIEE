@@ -2,28 +2,22 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SpaceInvaders
 {
-    internal class Bonus : Projectile
+    internal class LifeBonus : Projectile
     {
-        public Bonus(Vecteur2D position, double speed, Side side) : base(position, speed, 1, Properties.Resources.bonus, side)
+        public LifeBonus(Vecteur2D position, double speed, Side side) : base(position, speed, 1, Properties.Resources.bonus, side)
         {
         }
 
         public override void Update(Game gameInstance, double deltaT)
         {
-            // Déplacement du missile
-            Position.y += Speed * deltaT;
-
-            // Tuer si le missile sort du cadre de jeu
-            if (Position.y < 0 - Image.Height || Position.y > gameInstance.GameSize.Width)
-            {
-                Lives = 0;
-            }
-
+            base.Update(gameInstance, deltaT);
             // Test collision avec les objets du jeu
             foreach (GameObject gameObject in gameInstance.gameObjects)
             {

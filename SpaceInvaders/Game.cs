@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using System.Drawing.Text;
 using System.Runtime.InteropServices;
+using SpaceInvaders.Properties;
 
 namespace SpaceInvaders
 {
@@ -143,18 +144,18 @@ namespace SpaceInvaders
         private void EnemiesBlockCreation()
         {
             int enemyBlockOffsetX = 80;
-            int enemyBlockOffsetY = Properties.Resources.ship6.Height;
+            int enemyBlockOffsetY = Resources.ship6.Height;
             this.Enemies = new EnemyBlock(new Vecteur2D(enemyBlockOffsetX, enemyBlockOffsetY), GameSize.Width - enemyBlockOffsetX * 2);
 
             List<Bitmap> sprites = new List<Bitmap>();
-            sprites.Add(Properties.Resources.ship1);
-            sprites.Add(Properties.Resources.ship2);
-            sprites.Add(Properties.Resources.ship4);
-            sprites.Add(Properties.Resources.ship5);
-            sprites.Add(Properties.Resources.ship6);
-            sprites.Add(Properties.Resources.ship7);
-            sprites.Add(Properties.Resources.ship8);
-            sprites.Add(Properties.Resources.ship9);
+            sprites.Add(Resources.ship1);
+            sprites.Add(Resources.ship2);
+            sprites.Add(Resources.ship4);
+            sprites.Add(Resources.ship5);
+            sprites.Add(Resources.ship6);
+            sprites.Add(Resources.ship7);
+            sprites.Add(Resources.ship8);
+            sprites.Add(Resources.ship9);
 
             Enemies.AddLine(1, 50 * (1+WaveCounter / 6), sprites[(4 + WaveCounter) % 7]);
             Enemies.AddLine(2, 30 * (1+WaveCounter / 6), sprites[(5 + WaveCounter) % 7]);
@@ -196,7 +197,7 @@ namespace SpaceInvaders
         {
             for (int i = 0; i < 3; i++)
             {
-                int imageWidth = Properties.Resources.bunker.Width;
+                int imageWidth = Resources.bunker.Width;
                 Vecteur2D Position = new Vecteur2D((GameSize.Width) / 3 * (i + 1) - (GameSize.Width / 6 + imageWidth / 2), GameSize.Height - 200);
                 Bunker bunker = new Bunker(Position);
                 AddNewGameObject(bunker);
@@ -208,13 +209,24 @@ namespace SpaceInvaders
 
         private void ResetGame()
         {
-            // Incrémentation du compteur de vagues
-            WaveCounter++;
-
             // Suppression tous les objets du jeu
             this.Enemies = null;
             this.gameObjects.Clear();
             this.gameObjects.Add(this.PlayerShip);
+
+            if (State == GameStates.Lost)
+            {
+                WaveCounter = 0;
+                PlayerShip.Lives = PlayerShip.InitialLives;
+                PlayerShip.Points = 0;
+                PlayerShip.MissileCounter = 0;
+            }
+            else
+            {
+                // Incrémentation du compteur de vagues
+                WaveCounter++;
+                PlayerShip.Lives += 50;
+            }
             
 
             // Création du bloc d'ennemis
@@ -248,14 +260,23 @@ namespace SpaceInvaders
         /// <param name="g">Graphics to draw in</param>
         public void Draw(Graphics g)
         {
-            Image BackgroundImage = Properties.Resources.background;
-            Rectangle rectangle = new Rectangle(0, 0, GameSize.Width, GameSize.Height);
-            g.DrawImage(BackgroundImage, rectangle);
+            Image BackgroundImage = Resources.background;
+            Rectangle backgroundRectangle = new Rectangle(0, 0, GameSize.Width, GameSize.Height);
+            g.DrawImage(BackgroundImage, backgroundRectangle);
             SolidBrush brush = new SolidBrush(Color.White);
             PrivateFontCollection privateFontCollection = new PrivateFontCollection();
-            IntPtr fontBuffer = Marshal.UnsafeAddrOfPinnedArrayElement(Properties.Resources.space_invaders_font, 0);
-            privateFontCollection.AddMemoryFont(fontBuffer, Properties.Resources.space_invaders_font.Length);
+            IntPtr fontBuffer = Marshal.UnsafeAddrOfPinnedArrayElement(Resources.space_invaders_font, 0);
+            privateFontCollection.AddMemoryFont(fontBuffer, Resources.space_invaders_font.Length);
 
+            int missileWidth = 10;
+            for (int i = 0; i<PlayerShip.MissileCounter; i++)
+            {
+                Rectangle missileRectangle = new Rectangle(missileWidth, 10, Resources.shoot2.Width, Resources.shoot2.Height);
+                g.DrawImage(Resources.shoot2, missileRectangle);
+                missileWidth += Resources.shoot2.Width + 5;
+
+            }
+            
             // Draw "PAUSE" in the windows if the game is in Pause state 
             if (State == GameStates.Pause) {
                 Font font = new Font(privateFontCollection.Families[0], 22);
@@ -293,17 +314,6 @@ namespace SpaceInvaders
             // add new game objects
             gameObjects.UnionWith(pendingNewGameObjects);
             pendingNewGameObjects.Clear();
-          
-            //// if space is pressed DEBUG SPAWN BALLE QUI TOMBE
-            //if (keyPressed.Contains(Keys.Space))
-            //{
-            //    // create new BalleQuiTombe
-            //    GameObject newObject = new BalleQuiTombe(gameSize.Width / 2, 0);
-            //    // add it to the game
-            //    AddNewGameObject(newObject);
-            //    // release key space (no autofire)
-            //    ReleaseKey(Keys.Space);
-            //}
 
             //launch the game when Enter is pressed
             if (keyPressed.Contains(Keys.Enter) && State == GameStates.Initial)
@@ -311,19 +321,21 @@ namespace SpaceInvaders
                 State = GameStates.Play;
                 ReleaseKey(Keys.Enter);
             }
-            //DEBUG SPAWN MISSILE
-            else if (keyPressed.Contains(Keys.Down))
+            // spawn super missile if the player have missile in stock
+            else if (keyPressed.Contains(Keys.Down) && PlayerShip.MissileCounter > 0)
             {
-                // create new BalleQuiTombe
-                GameObject newObject = new Projectile(new Vecteur2D(PlayerShip.Position.x, 0), 100, 150, Properties.Resources.shoot2, Side.Neutral);
+                // create new Missile
+                GameObject newObject = new Missile(new Vecteur2D(PlayerShip.Position.x, 0), 100, 150, Resources.shoot2, Side.Ally);
                 // add it to the game
                 AddNewGameObject(newObject);
                 // release key space (no autofire)
                 ReleaseKey(Keys.Down);
+                // decrement missile counter
+                PlayerShip.MissileCounter--;
             }
             else if (keyPressed.Contains(Keys.B))
             {
-                Bonus newBonus = new Bonus(new Vecteur2D(PlayerShip.Position.x, 0), 100, Side.Bonus);
+                LifeBonus newBonus = new LifeBonus(new Vecteur2D(PlayerShip.Position.x, 0), 100, Side.Bonus);
                 // add it to the game
                 AddNewGameObject(newBonus);
                 // release key space (no autofire)
@@ -369,18 +381,27 @@ namespace SpaceInvaders
             // remove dead objects
             Random rand = new Random();
             gameObjects.RemoveWhere(gameObject => {
-                if (!gameObject.IsAlive() && gameObject.GetType() == typeof(Bonus))
+                if (!gameObject.IsAlive())
                 {
-                    PlayerShip.Lives += 50;
-                }
-                if(!gameObject.IsAlive() && gameObject.GetType() == typeof(SpaceShip))
-                {
-                    PlayerShip.Points += gameObject.InitialLives;
-                    if (rand.NextDouble() < 0.1)
+                    if (gameObject is LifeBonus)
                     {
-                        // create a new bonus object
-                        Bonus newBonus = new Bonus(new Vecteur2D(PlayerShip.Position.x, 0), 100, Side.Bonus);
-                        // add it to the game
+                        PlayerShip.Lives += Math.Min(50, PlayerShip.InitialLives - PlayerShip.Lives);
+                    }
+                    else if (gameObject is MissileBonus)
+                    {
+                        PlayerShip.MissileCounter++;
+                    }
+                }
+                if(!gameObject.IsAlive() && gameObject is SpaceShip)
+                {
+                    if (gameObject != PlayerShip)
+                    {
+                        PlayerShip.Points += gameObject.InitialLives;
+                    }
+                    // random creation of a new bonus object
+                    Projectile newBonus = Projectile.RandomCreation(rand, PlayerShip.Position.x, 100);
+                    // add it to the game
+                    if (newBonus != null){
                         AddNewGameObject(newBonus);
                     }
                 }
