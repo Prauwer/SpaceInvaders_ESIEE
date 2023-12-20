@@ -261,17 +261,6 @@ namespace SpaceInvaders
             // add new game objects
             gameObjects.UnionWith(pendingNewGameObjects);
             pendingNewGameObjects.Clear();
-          
-            //// if space is pressed DEBUG SPAWN BALLE QUI TOMBE
-            //if (keyPressed.Contains(Keys.Space))
-            //{
-            //    // create new BalleQuiTombe
-            //    GameObject newObject = new BalleQuiTombe(gameSize.Width / 2, 0);
-            //    // add it to the game
-            //    AddNewGameObject(newObject);
-            //    // release key space (no autofire)
-            //    ReleaseKey(Keys.Space);
-            //}
 
             //launch the game when Enter is pressed
             if (keyPressed.Contains(Keys.Enter) && State == GameStates.Initial)
@@ -279,19 +268,21 @@ namespace SpaceInvaders
                 State = GameStates.Play;
                 ReleaseKey(Keys.Enter);
             }
-            //DEBUG SPAWN MISSILE
-            else if (keyPressed.Contains(Keys.Down))
+            //SPAWN MISSILE
+            else if (keyPressed.Contains(Keys.Down) && PlayerShip.MissileCounter > 0)
             {
-                // create new BalleQuiTombe
-                GameObject newObject = new Projectile(new Vecteur2D(PlayerShip.Position.x, 0), 100, 150, Properties.Resources.shoot2, Side.Neutral);
+                // create new Missile
+                GameObject newObject = new Missile(new Vecteur2D(PlayerShip.Position.x, 0), 100, 150, Properties.Resources.shoot2, Side.Neutral);
                 // add it to the game
                 AddNewGameObject(newObject);
                 // release key space (no autofire)
                 ReleaseKey(Keys.Down);
+                // decrement missile counter
+                PlayerShip.MissileCounter--;
             }
             else if (keyPressed.Contains(Keys.B))
             {
-                Bonus newBonus = new Bonus(new Vecteur2D(PlayerShip.Position.x, 0), 100, Side.Bonus);
+                LifeBonus newBonus = new LifeBonus(new Vecteur2D(PlayerShip.Position.x, 0), 100, Side.Bonus);
                 // add it to the game
                 AddNewGameObject(newBonus);
                 // release key space (no autofire)
@@ -336,18 +327,24 @@ namespace SpaceInvaders
             // remove dead objects
             Random rand = new Random();
             gameObjects.RemoveWhere(gameObject => {
-                if (!gameObject.IsAlive() && gameObject.GetType() == typeof(Bonus))
+                if (!gameObject.IsAlive())
                 {
-                    PlayerShip.Lives += 50;
+                    if (gameObject is LifeBonus)
+                    {
+                        PlayerShip.Lives += 50;
+                    }
+                    else if (gameObject is MissileBonus)
+                    {
+                        PlayerShip.MissileCounter++;
+                    }
                 }
                 if(!gameObject.IsAlive() && gameObject.GetType() == typeof(SpaceShip))
                 {
                     PlayerShip.Points += gameObject.InitialLives;
-                    if (rand.NextDouble() < 0.1)
-                    {
-                        // create a new bonus object
-                        Bonus newBonus = new Bonus(new Vecteur2D(PlayerShip.Position.x, 0), 100, Side.Bonus);
-                        // add it to the game
+                    // random creation of a new bonus object
+                    Projectile newBonus = Projectile.RandomCreation(rand, PlayerShip.Position.x, 100);
+                    // add it to the game
+                    if (newBonus != null){
                         AddNewGameObject(newBonus);
                     }
                 }

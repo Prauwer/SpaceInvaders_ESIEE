@@ -49,8 +49,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bonus.cs" />
+    <Compile Include="MissileBonus.cs" />
+    <Compile Include="LifeBonus.cs" />
     <Compile Include="Bunker.cs" />
+    <Compile Include="Missile.cs" />
     <Compile Include="EnemyBlock.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

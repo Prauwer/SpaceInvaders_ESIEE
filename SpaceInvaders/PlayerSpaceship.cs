@@ -12,6 +12,7 @@ namespace SpaceInvaders
     internal class PlayerSpaceship : SpaceShip
     {
         public int Points;
+        public int MissileCounter;
 
         public PlayerSpaceship(Vecteur2D position, int lives) : base(position, lives, Properties.Resources.ship3, Side.Ally)
         {
@@ -52,7 +53,7 @@ namespace SpaceInvaders
 
         protected override void OnCollision(Projectile p, int numberOfPixelsInCollision)
         {
-            if (p.GetType() ==  typeof(Bonus)) {
+            if (p.GetType() ==  typeof(LifeBonus)) {
                 p.Lives = 0;
             }
             else

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SpaceInvaders
 {
-    internal class Projectile : SimpleObject
+    abstract class Projectile : SimpleObject
     {
         //Attributs
        
@@ -34,20 +34,26 @@ namespace SpaceInvaders
             {
                 Lives = 0;
             }
-
-            // Test collision avec les objets du jeu
-            foreach (GameObject gameObject in gameInstance.gameObjects)
-            {
-                if (gameObject != this) {
-                    gameObject.Collision(this);
-                }
-            }
         }
 
-        protected override void OnCollision(Projectile p, int numberOfPixelsInCollision)
+        public static Projectile RandomCreation(Random rand, double posX, double posY)
         {
-            p.Lives = 0;
-            this.Lives = 0;
+            if (rand.NextDouble() < 0.1)
+            {
+                if (rand.NextDouble() > 0.5)
+                {
+                    // create a new lifeBonus object
+                    LifeBonus newBonus = new LifeBonus(new Vecteur2D(posX, posY), 100, Side.Bonus);
+                    return newBonus;
+                }
+                else
+                {
+                    // create a new MissileBonus object
+                    MissileBonus newBonus = new MissileBonus(new Vecteur2D(posX, posY), 100, Side.Bonus);
+                    return newBonus;
+                }
+            }
+            return null;
         }
     }
 }
