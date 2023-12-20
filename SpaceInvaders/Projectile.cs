@@ -38,7 +38,7 @@ namespace SpaceInvaders
 
         public static Projectile RandomCreation(Random rand, double posX, double posY)
         {
-            if (rand.NextDouble() < 0.1)
+            if (rand.NextDouble() < 0.15)
             {
                 if (rand.NextDouble() > 0.5)
                 {

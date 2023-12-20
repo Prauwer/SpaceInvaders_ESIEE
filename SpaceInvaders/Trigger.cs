@@ -7,18 +7,24 @@ using System.Threading.Tasks;
 
 namespace SpaceInvaders
 {
-    internal class Trigger : SimpleObject
+    internal class Trigger : GameObject
     {
+        public Vecteur2D Position { get; protected set; }
         public Size Size { get; protected set; }
-
+        public Image Image { get; protected set; }
         public bool isTriggered { get; protected set; }
 
-        public Trigger(Vecteur2D position, Size size): base(Side.Neutral)
+        public Trigger(Vecteur2D position, Size size)
         {
             Position = position;
             Size = size;
             Image = Properties.Resources.Trigger;
             isTriggered = false;
+        }
+
+        public override void Collision(Projectile p)
+        {
+            
         }
 
         public override void Draw(Game gameInstance, Graphics graphics)
@@ -43,10 +49,7 @@ namespace SpaceInvaders
                     bunker.Lives = 0;
                 }
             }
-        }
 
-        protected override void OnCollision(Projectile m, int numberOfPixelsInCollision)
-        {
         }
     }
 }
