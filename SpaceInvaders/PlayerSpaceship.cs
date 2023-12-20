@@ -12,14 +12,12 @@ namespace SpaceInvaders
 {
     internal class PlayerSpaceship : SpaceShip
     {
-        private int MaxLives;
         private int Bleed;
         public int Points;
         public int MissileCounter;
 
         public PlayerSpaceship(Vecteur2D position, int lives) : base(position, lives, Properties.Resources.ship3, Side.Ally)
         {
-            MaxLives = lives;
             Bleed = 0;
         }
 
@@ -58,19 +56,26 @@ namespace SpaceInvaders
             }
         }
 
-        protected override void OnCollision(Missile m, int numberOfPixelsInCollision)
+        protected override void OnCollision(Projectile p, int numberOfPixelsInCollision)
         {
-            int damage = m.Lives; // Dégâts du missile correspond à son nombre de vies
-
-            m.Lives = 0; // Le missile ennemi est détruit à l'impact
-
-            if (damage >= Lives) // Si le missile tue le vaisseau
+            if (p is LifeBonus)
             {
-                Bleed = Lives;
+                p.Lives = 0;
             }
-            else // Si le missile le tue pas le vaisseau
+            else
             {
-                Bleed += damage;
+                int damage = p.Lives; // Dégâts du missile correspond à son nombre de vies
+
+                p.Lives = 0; // Le missile ennemi est détruit à l'impact
+
+                if (damage >= Lives) // Si le missile tue le vaisseau
+                {
+                    Bleed = Lives;
+                }
+                else // Si le missile le tue pas le vaisseau
+                {
+                    Bleed += damage;
+                }
             }
         }
 
@@ -80,13 +85,13 @@ namespace SpaceInvaders
 
             // Calcul des valeurs
             double HPLenght;
-            HPLenght = ((double)Lives - (double)Bleed) / (double)MaxLives * 200;
+            HPLenght = ((double)Lives - (double)Bleed) / (double)InitialLives * 200;
 
             double BleedLenght;
-            BleedLenght = (double)Bleed / (double)MaxLives * 200;
+            BleedLenght = (double)Bleed / (double)InitialLives * 200;
 
             int percentHP;
-            percentHP = (int)((double)Lives / (double)MaxLives * 100);
+            percentHP = (int)((double)Lives / (double)InitialLives * 100);
 
             // Style du texte
             PrivateFontCollection privateFontCollection = new PrivateFontCollection();
@@ -119,19 +124,6 @@ namespace SpaceInvaders
                 graphics.FillRectangle(brushBleedHP, (gameInstance.GameSize.Width / 20) + 35 + (int)HPLenght, (gameInstance.GameSize.Height * 19 / 20) - 3, (int)BleedLenght, 24); // Barre orange
             }
             graphics.FillRectangle(brushCurrentHP, (gameInstance.GameSize.Width / 20) + 35, (gameInstance.GameSize.Height * 19 / 20) - 3, (int)HPLenght, 24); // Barre verte
-        }
-
-        protected override void OnCollision(Projectile p, int numberOfPixelsInCollision)
-        {
-            if (p.GetType() ==  typeof(LifeBonus)) {
-                p.Lives = 0;
-            }
-            else
-            {
-                int damage = Math.Min(p.Lives, this.Lives);
-                p.Lives -= damage;
-                this.Lives -= damage;
-            }
         }
     }
 }

@@ -364,14 +364,14 @@ namespace SpaceInvaders
                 {
                     if (gameObject is LifeBonus)
                     {
-                        PlayerShip.Lives += 50;
+                        PlayerShip.Lives += Math.Min(50, PlayerShip.InitialLives - PlayerShip.Lives);
                     }
                     else if (gameObject is MissileBonus)
                     {
                         PlayerShip.MissileCounter++;
                     }
                 }
-                if(!gameObject.IsAlive() && gameObject.GetType() == typeof(SpaceShip))
+                if(!gameObject.IsAlive() && gameObject is SpaceShip)
                 {
                     PlayerShip.Points += gameObject.InitialLives;
                     // random creation of a new bonus object
