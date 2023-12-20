@@ -383,27 +383,8 @@ namespace SpaceInvaders
             gameObjects.RemoveWhere(gameObject => {
                 if (!gameObject.IsAlive())
                 {
-                    if (gameObject is LifeBonus)
-                    {
-                        PlayerShip.Lives += Math.Min(50, PlayerShip.InitialLives - PlayerShip.Lives);
-                    }
-                    else if (gameObject is MissileBonus)
-                    {
-                        PlayerShip.MissileCounter++;
-                    }
-                }
-                if(!gameObject.IsAlive() && gameObject is SpaceShip)
-                {
-                    if (gameObject != PlayerShip)
-                    {
-                        PlayerShip.Points += gameObject.InitialLives;
-                    }
-                    // random creation of a new bonus object
-                    Projectile newBonus = Projectile.RandomCreation(rand, PlayerShip.Position.x, 100);
-                    // add it to the game
-                    if (newBonus != null){
-                        AddNewGameObject(newBonus);
-                    }
+                    PlayerShip.handleBonus(gameObject);
+                    PlayerShip.handleEnnemieDie(gameObject, rand, this);
                 }
                 return !gameObject.IsAlive();
             }

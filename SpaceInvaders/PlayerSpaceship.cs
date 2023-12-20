@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace SpaceInvaders
 {
@@ -79,10 +80,38 @@ namespace SpaceInvaders
             }
         }
 
-        public override void Draw(Game gameInstance, Graphics graphics)
+        public void handleBonus(GameObject gameObject)
         {
-            base.Draw(gameInstance, graphics);
+            if (gameObject is LifeBonus)
+            {
+                Lives += Math.Min(50, InitialLives - Lives);
+            }
+            else if (gameObject is MissileBonus)
+            {
+                MissileCounter++;
+            }
+        }
 
+        public void handleEnnemieDie(GameObject gameObject, Random rand, Game game)
+        {
+            if (gameObject is SpaceShip && gameObject != this)
+            {
+                Points += gameObject.InitialLives;
+
+                // random creation of a new bonus object
+                Projectile newBonus = Projectile.RandomCreation(rand, Position.x, 100);
+
+                // add it to the game
+                if (newBonus != null)
+                {
+                    game.AddNewGameObject(newBonus);
+                }
+            }
+        }
+
+
+        private (double, double, int) GetHPValues()
+        {
             // Calcul des valeurs
             double HPLenght;
             HPLenght = ((double)Lives - (double)Bleed) / (double)InitialLives * 200;
@@ -93,6 +122,11 @@ namespace SpaceInvaders
             int percentHP;
             percentHP = (int)((double)Lives / (double)InitialLives * 100);
 
+            return (HPLenght, BleedLenght, percentHP);
+        }
+
+        private (Font, SolidBrush, StringFormat) setTextStyle()
+        {
             // Style du texte
             PrivateFontCollection privateFontCollection = new PrivateFontCollection();
             IntPtr fontBuffer = Marshal.UnsafeAddrOfPinnedArrayElement(Properties.Resources.space_invaders_font, 0);
@@ -103,6 +137,16 @@ namespace SpaceInvaders
 
             StringFormat stringFormatRight = new StringFormat();
             stringFormatRight.Alignment = StringAlignment.Far;
+            return (font, brush, stringFormatRight);
+        }
+
+        public override void Draw(Game gameInstance, Graphics graphics)
+        {
+            base.Draw(gameInstance, graphics);
+
+            (double HPLenght, double BleedLenght, int percentHP) = GetHPValues();
+
+            (Font font, SolidBrush brush, StringFormat stringFormatRight) = setTextStyle();
 
             // POINTS
             graphics.DrawString($"{Points} Points", font, brush, gameInstance.GameSize.Width * 16 / 20, gameInstance.GameSize.Height * 19 / 20);
