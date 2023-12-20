@@ -23,17 +23,6 @@ namespace SpaceInvaders
         /// </summary>
         public HashSet<GameObject> gameObjects = new HashSet<GameObject>();
 
-        public enum GameStates
-        {
-            Initial,
-            Play,
-            Pause,
-            Win,
-            Lost,
-        }
-
-        public GameStates State;
-
         /// <summary>
         /// Set of new game objects scheduled for addition to the game
         /// </summary>
@@ -51,6 +40,19 @@ namespace SpaceInvaders
         #endregion
 
         #region game technical elements
+
+        public enum GameStates
+        {
+            Initial,
+            Play,
+            Pause,
+            Win,
+            Lost,
+        }
+
+        public GameStates State;
+
+        public int WaveCounter = 0;
 
         /// <summary>
         ///  enemy ship block
@@ -144,11 +146,21 @@ namespace SpaceInvaders
             int enemyBlockOffsetY = Properties.Resources.ship6.Height;
             this.Enemies = new EnemyBlock(new Vecteur2D(enemyBlockOffsetX, enemyBlockOffsetY), GameSize.Width - enemyBlockOffsetX * 2);
 
-            Enemies.AddLine(1, 50, Properties.Resources.ship6);
-            Enemies.AddLine(2, 30, Properties.Resources.ship7);
-            Enemies.AddLine(5, 20, Properties.Resources.ship1);
-            Enemies.AddLine(6, 20, Properties.Resources.ship4);
-            Enemies.AddLine(7, 20, Properties.Resources.ship2);
+            List<Bitmap> sprites = new List<Bitmap>();
+            sprites.Add(Properties.Resources.ship1);
+            sprites.Add(Properties.Resources.ship2);
+            sprites.Add(Properties.Resources.ship4);
+            sprites.Add(Properties.Resources.ship5);
+            sprites.Add(Properties.Resources.ship6);
+            sprites.Add(Properties.Resources.ship7);
+            sprites.Add(Properties.Resources.ship8);
+            sprites.Add(Properties.Resources.ship9);
+
+            Enemies.AddLine(1, 50 * (1+WaveCounter / 6), sprites[(4 + WaveCounter) % 7]);
+            Enemies.AddLine(2, 30 * (1+WaveCounter / 6), sprites[(5 + WaveCounter) % 7]);
+            Enemies.AddLine(5, 20 * (1+WaveCounter / 6), sprites[(0 + WaveCounter) % 7]);
+            Enemies.AddLine(6, 20 * (1+WaveCounter / 6), sprites[(2 + WaveCounter) % 7]);
+            Enemies.AddLine(7, 20 * (1+WaveCounter / 6), sprites[(1 + WaveCounter) % 7]);
 
             AddNewGameObject(this.Enemies);
             foreach (SpaceShip enemyship in Enemies.enemyships)
@@ -196,16 +208,17 @@ namespace SpaceInvaders
 
         private void ResetGame()
         {
+            // Incrémentation du compteur de vagues
+            WaveCounter++;
+
             // Suppression tous les objets du jeu
-            this.PlayerShip = null;
             this.Enemies = null;
             this.gameObjects.Clear();
+            this.gameObjects.Add(this.PlayerShip);
+            
 
             // Création du bloc d'ennemis
             this.EnemiesBlockCreation();
-
-            // Creation du vaisseau
-            this.PlayerSpaceShipCreation();
 
             // Création des bunkers
             this.BunkersCreation();
