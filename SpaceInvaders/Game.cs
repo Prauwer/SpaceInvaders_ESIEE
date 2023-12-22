@@ -239,10 +239,6 @@ namespace SpaceInvaders
 
         }
 
-        #endregion
-
-        #region methods
-
         /// <summary>
         /// Force a given key to be ignored in following updates until the user
         /// explicitily retype it or the system autofires it again.

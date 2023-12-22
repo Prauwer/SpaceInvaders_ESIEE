@@ -17,6 +17,10 @@ namespace SpaceInvaders
         public int Points;
         public int MissileCounter;
 
+        private Font Font;
+        private SolidBrush Brush;
+        private StringFormat StringFormatRight;
+
         public PlayerSpaceship(Vecteur2D position, int lives) : base(position, lives, Properties.Resources.ship3, Side.Ally)
         {
             Bleed = 0;
@@ -110,7 +114,7 @@ namespace SpaceInvaders
         }
 
 
-        private (double, double, int) GetHPValues()
+        private void DrawLifeBar(Game gameInstance, Graphics graphics)
         {
             // Calcul des valeurs
             double HPLenght;
@@ -122,37 +126,7 @@ namespace SpaceInvaders
             int percentHP;
             percentHP = (int)((double)Lives / (double)InitialLives * 100);
 
-            return (HPLenght, BleedLenght, percentHP);
-        }
-
-        private (Font, SolidBrush, StringFormat) setTextStyle()
-        {
-            // Style du texte
-            PrivateFontCollection privateFontCollection = new PrivateFontCollection();
-            IntPtr fontBuffer = Marshal.UnsafeAddrOfPinnedArrayElement(Properties.Resources.space_invaders_font, 0);
-            privateFontCollection.AddMemoryFont(fontBuffer, Properties.Resources.space_invaders_font.Length);
-
-            SolidBrush brush = new SolidBrush(Color.White);
-            Font font = new Font(privateFontCollection.Families[0], 12);
-
-            StringFormat stringFormatRight = new StringFormat();
-            stringFormatRight.Alignment = StringAlignment.Far;
-            return (font, brush, stringFormatRight);
-        }
-
-        public override void Draw(Game gameInstance, Graphics graphics)
-        {
-            base.Draw(gameInstance, graphics);
-
-            (double HPLenght, double BleedLenght, int percentHP) = GetHPValues();
-
-            (Font font, SolidBrush brush, StringFormat stringFormatRight) = setTextStyle();
-
-            // POINTS
-            graphics.DrawString($"{Points} Points", font, brush, gameInstance.GameSize.Width * 16 / 20, gameInstance.GameSize.Height * 19 / 20);
-
-            // BARRE DE VIE
-            graphics.DrawString($"{percentHP} %", font, brush, (gameInstance.GameSize.Width / 20) + 35, (gameInstance.GameSize.Height * 19 / 20), stringFormatRight);
+            graphics.DrawString($"{percentHP} %", Font, Brush, (gameInstance.GameSize.Width / 20) + 35, (gameInstance.GameSize.Height * 19 / 20), StringFormatRight);
 
             Pen pen = new Pen(Color.Black, 2);
             SolidBrush brushMaxHP = new SolidBrush(Color.Red);
@@ -163,11 +137,38 @@ namespace SpaceInvaders
 
             graphics.FillRectangle(brushMaxHP, (gameInstance.GameSize.Width / 20) + 35, (gameInstance.GameSize.Height * 19 / 20) - 3, 200, 24); // Barre rouge
 
-            if(Bleed > 0)
+            if (Bleed > 0)
             {
                 graphics.FillRectangle(brushBleedHP, (gameInstance.GameSize.Width / 20) + 35 + (int)HPLenght, (gameInstance.GameSize.Height * 19 / 20) - 3, (int)BleedLenght, 24); // Barre orange
             }
             graphics.FillRectangle(brushCurrentHP, (gameInstance.GameSize.Width / 20) + 35, (gameInstance.GameSize.Height * 19 / 20) - 3, (int)HPLenght, 24); // Barre verte
+        }
+
+        private void SetTextStyle()
+        {
+            // Style du texte
+            PrivateFontCollection privateFontCollection = new PrivateFontCollection();
+            IntPtr fontBuffer = Marshal.UnsafeAddrOfPinnedArrayElement(Properties.Resources.space_invaders_font, 0);
+            privateFontCollection.AddMemoryFont(fontBuffer, Properties.Resources.space_invaders_font.Length);
+
+            Brush = new SolidBrush(Color.White);
+            Font = new Font(privateFontCollection.Families[0], 12);
+
+            StringFormatRight = new StringFormat();
+            StringFormatRight.Alignment = StringAlignment.Far;
+        }
+
+        public override void Draw(Game gameInstance, Graphics graphics)
+        {
+            base.Draw(gameInstance, graphics);
+
+            SetTextStyle();
+
+            // POINTS
+            graphics.DrawString($"{Points} Points", Font, Brush, gameInstance.GameSize.Width * 16 / 20, gameInstance.GameSize.Height * 19 / 20);
+
+            // BARRE DE VIE
+            DrawLifeBar(gameInstance, graphics);
         }
     }
 }
