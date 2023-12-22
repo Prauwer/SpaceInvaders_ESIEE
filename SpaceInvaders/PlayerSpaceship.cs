@@ -17,6 +17,10 @@ namespace SpaceInvaders
         public int Points;
         public int MissileCounter;
 
+        private Font Font;
+        private SolidBrush Brush;
+        private StringFormat StringFormatRight;
+
         public PlayerSpaceship(Vecteur2D position, int lives) : base(position, lives, Properties.Resources.ship3, Side.Ally)
         {
             Bleed = 0;
@@ -146,7 +150,22 @@ namespace SpaceInvaders
             int percentHP;
             percentHP = (int)((double)Lives / (double)InitialLives * 100);
 
-            return (HPLenght, BleedLenght, percentHP);
+            graphics.DrawString($"{percentHP} %", Font, Brush, (gameInstance.GameSize.Width / 20) + 35, (gameInstance.GameSize.Height * 19 / 20), StringFormatRight);
+
+            Pen pen = new Pen(Color.Black, 2);
+            SolidBrush brushMaxHP = new SolidBrush(Color.Red);
+            SolidBrush brushCurrentHP = new SolidBrush(Color.Green);
+            SolidBrush brushBleedHP = new SolidBrush(Color.Orange);
+
+            graphics.DrawRectangle(pen, (gameInstance.GameSize.Width / 20) + 35, (gameInstance.GameSize.Height * 19 / 20) - 3, 200, 25); // Cadre
+
+            graphics.FillRectangle(brushMaxHP, (gameInstance.GameSize.Width / 20) + 35, (gameInstance.GameSize.Height * 19 / 20) - 3, 200, 24); // Barre rouge
+
+            if (Bleed > 0)
+            {
+                graphics.FillRectangle(brushBleedHP, (gameInstance.GameSize.Width / 20) + 35 + (int)HPLenght, (gameInstance.GameSize.Height * 19 / 20) - 3, (int)BleedLenght, 24); // Barre orange
+            }
+            graphics.FillRectangle(brushCurrentHP, (gameInstance.GameSize.Width / 20) + 35, (gameInstance.GameSize.Height * 19 / 20) - 3, (int)HPLenght, 24); // Barre verte
         }
 
 
@@ -160,12 +179,11 @@ namespace SpaceInvaders
             IntPtr fontBuffer = Marshal.UnsafeAddrOfPinnedArrayElement(Properties.Resources.space_invaders_font, 0);
             privateFontCollection.AddMemoryFont(fontBuffer, Properties.Resources.space_invaders_font.Length);
 
-            SolidBrush brush = new SolidBrush(Color.White);
-            Font font = new Font(privateFontCollection.Families[0], 12);
+            Brush = new SolidBrush(Color.White);
+            Font = new Font(privateFontCollection.Families[0], 12);
 
-            StringFormat stringFormatRight = new StringFormat();
-            stringFormatRight.Alignment = StringAlignment.Far;
-            return (font, brush, stringFormatRight);
+            StringFormatRight = new StringFormat();
+            StringFormatRight.Alignment = StringAlignment.Far;
         }
 
         /// <summary>
@@ -177,30 +195,13 @@ namespace SpaceInvaders
         {
             base.Draw(gameInstance, graphics);
 
-            (double HPLenght, double BleedLenght, int percentHP) = GetHPValues();
-
-            (Font font, SolidBrush brush, StringFormat stringFormatRight) = setTextStyle();
+            SetTextStyle();
 
             // POINTS
-            graphics.DrawString($"{Points} Points", font, brush, gameInstance.GameSize.Width * 16 / 20, gameInstance.GameSize.Height * 19 / 20);
+            graphics.DrawString($"{Points} Points", Font, Brush, gameInstance.GameSize.Width * 16 / 20, gameInstance.GameSize.Height * 19 / 20);
 
             // BARRE DE VIE
-            graphics.DrawString($"{percentHP} %", font, brush, (gameInstance.GameSize.Width / 20) + 35, (gameInstance.GameSize.Height * 19 / 20), stringFormatRight);
-
-            Pen pen = new Pen(Color.Black, 2);
-            SolidBrush brushMaxHP = new SolidBrush(Color.Red);
-            SolidBrush brushCurrentHP = new SolidBrush(Color.Green);
-            SolidBrush brushBleedHP = new SolidBrush(Color.Orange);
-
-            graphics.DrawRectangle(pen, (gameInstance.GameSize.Width / 20) + 35, (gameInstance.GameSize.Height * 19 / 20) - 3, 200, 25); // Cadre
-
-            graphics.FillRectangle(brushMaxHP, (gameInstance.GameSize.Width / 20) + 35, (gameInstance.GameSize.Height * 19 / 20) - 3, 200, 24); // Barre rouge
-
-            if(Bleed > 0)
-            {
-                graphics.FillRectangle(brushBleedHP, (gameInstance.GameSize.Width / 20) + 35 + (int)HPLenght, (gameInstance.GameSize.Height * 19 / 20) - 3, (int)BleedLenght, 24); // Barre orange
-            }
-            graphics.FillRectangle(brushCurrentHP, (gameInstance.GameSize.Width / 20) + 35, (gameInstance.GameSize.Height * 19 / 20) - 3, (int)HPLenght, 24); // Barre verte
+            DrawLifeBar(gameInstance, graphics);
         }
     }
 }
