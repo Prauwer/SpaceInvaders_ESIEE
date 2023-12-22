@@ -17,6 +17,11 @@ namespace SpaceInvaders
 
         //Méthodes
 
+        /// <summary>
+        /// Update the state of the Missile
+        /// </summary>
+        /// <param name="gameInstance">instance of the current game</param>
+        /// <param name="deltaT">time ellapsed in seconds since last call to Update</param>
         public override void Update(Game gameInstance, double deltaT)
         {
             base.Update(gameInstance, deltaT);
@@ -30,6 +35,11 @@ namespace SpaceInvaders
             }
         }
 
+        /// <summary>
+        /// handle the case of the missile is hitted
+        /// </summary>
+        /// <param name="p">projectile in collision with the missile</param>
+        /// <param name="numberOfPixelsInCollision">number of pixels in collision with the missile</param>
         protected override void OnCollision(Projectile p, int numberOfPixelsInCollision)
         {
             p.Lives = 0;
