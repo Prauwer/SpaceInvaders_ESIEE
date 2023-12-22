@@ -54,6 +54,11 @@ namespace SpaceInvaders
         /// <returns>Am I alive ?</returns>
         public abstract bool IsAlive();
 
+        /// <summary>
+        /// Determines an projectile is in collision of the game object
+        /// </summary>
+        /// <oaram name="p">projectile to check</oaram>
+        /// <returns>Am I alive ?</returns>
         public abstract void Collision(Projectile p);
     }
 }

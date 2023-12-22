@@ -23,17 +23,29 @@ namespace SpaceInvaders
 
         protected abstract void OnCollision(Projectile m, int numberOfPixelsInCollision);
 
+        /// <summary>
+        /// Render the simple object
+        /// </summary>
+        /// <param name="gameInstance">instance of the current game</param>
+        /// <param name="graphics">graphic object where to perform rendering</param>
         public override void Draw(Game gameInstance, Graphics graphics)
         {
             graphics.DrawImage(Image, (float)Position.x, (float)Position.y, Image.Width, Image.Height);
         }
 
+        /// <summary>
+        /// Determines if object is alive. If false, the object will be removed automatically.
+        /// </summary>
+        /// <returns>Am I alive ?</returns>
         public override bool IsAlive()
         {
             return Lives > 0;
         }
 
-        public void playHit() // Play sound on ship getting hit
+        /// <summary>
+        /// Play sound on ship getting hit
+        /// </summary>
+        public void playHit() 
         {
             SoundPlayer soundPlayer = new SoundPlayer();
             soundPlayer.Stream = Properties.Resources.shoot_sound;
@@ -55,6 +67,11 @@ namespace SpaceInvaders
             }
         }
 
+        /// <summary>
+        /// Determines an projectile is in collision of the game object
+        /// </summary>
+        /// <oaram name="p">projectile to check</oaram>
+        /// <returns>Am I alive ?</returns>
         public override void Collision(Projectile p)
         {
             if (CollisionRectangle(p) && (this.Side!=p.Side && (p.Side != Side.Bonus || (this.Side == Side.Ally && p.Side == Side.Bonus))))

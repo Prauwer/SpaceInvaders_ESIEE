@@ -15,6 +15,11 @@ namespace SpaceInvaders
         {
         }
 
+        /// <summary>
+        /// Update the state of the Life Bonus
+        /// </summary>
+        /// <param name="gameInstance">instance of the current game</param>
+        /// <param name="deltaT">time ellapsed in seconds since last call to Update</param>
         public override void Update(Game gameInstance, double deltaT)
         {
             base.Update(gameInstance, deltaT);
@@ -28,6 +33,11 @@ namespace SpaceInvaders
             }
         }
 
+        /// <summary>
+        /// handle the case of the life bonus is hitted
+        /// </summary>
+        /// <param name="p">projectile in collision with the bonus</param>
+        /// <param name="numberOfPixelsInCollision">number of pixels in collision with the bonus</param>
         protected override void OnCollision(Projectile p, int numberOfPixelsInCollision)
         {
             if (p.Side == Side.Ally)

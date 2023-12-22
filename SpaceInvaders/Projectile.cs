@@ -24,6 +24,11 @@ namespace SpaceInvaders
 
         //Méthodes
 
+        /// <summary>
+        /// Update the state of the Projecile
+        /// </summary>
+        /// <param name="gameInstance">instance of the current game</param>
+        /// <param name="deltaT">time ellapsed in seconds since last call to Update</param>
         public override void Update(Game gameInstance, double deltaT)
         {
             // Déplacement du missile
@@ -35,6 +40,13 @@ namespace SpaceInvaders
                 Lives = 0;
             }
         }
+
+        /// <summary>
+        /// Render the Player Spaceship
+        /// </summary>
+        /// <param name="rand">random object (we put it in params to avoid that every random have the same value)</param>
+        /// <param name="posX">Position X where we want to create the bonus</param>
+        /// <param name="posY">Position Y where we want to create the bonus</param>
 
         public static Projectile RandomCreation(Random rand, double posX, double posY)
         {

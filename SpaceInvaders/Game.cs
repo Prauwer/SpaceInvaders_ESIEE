@@ -147,15 +147,17 @@ namespace SpaceInvaders
             int enemyBlockOffsetY = Resources.ship6.Height;
             this.Enemies = new EnemyBlock(new Vecteur2D(enemyBlockOffsetX, enemyBlockOffsetY), GameSize.Width - enemyBlockOffsetX * 2);
 
-            List<Bitmap> sprites = new List<Bitmap>();
-            sprites.Add(Resources.ship1);
-            sprites.Add(Resources.ship2);
-            sprites.Add(Resources.ship4);
-            sprites.Add(Resources.ship5);
-            sprites.Add(Resources.ship6);
-            sprites.Add(Resources.ship7);
-            sprites.Add(Resources.ship8);
-            sprites.Add(Resources.ship9);
+            List<Bitmap> sprites = new List<Bitmap>
+            {
+                Resources.ship1,
+                Resources.ship2,
+                Resources.ship4,
+                Resources.ship5,
+                Resources.ship6,
+                Resources.ship7,
+                Resources.ship8,
+                Resources.ship9,
+            };
 
             Enemies.AddLine(1, 50 * (1+WaveCounter / 6), sprites[(4 + WaveCounter) % 7]);
             Enemies.AddLine(2, 30 * (1+WaveCounter / 6), sprites[(5 + WaveCounter) % 7]);
