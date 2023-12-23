@@ -25,7 +25,7 @@ namespace SpaceInvaders
 
         public enum GameStates
         {
-            Initial,
+            Menu,
             Play,
             Pause,
             Win,
@@ -243,7 +243,46 @@ namespace SpaceInvaders
         /// <param name="g">Graphics to draw in</param>
         public void Draw(Graphics g)
         {
-            menu.UpdateMenu(g);
+            // Background drawing
+            Image BackgroundImage = Properties.Resources.background;
+            Rectangle rectangle = new Rectangle(0, 0, game.GameSize.Width, game.GameSize.Height);
+            g.DrawImage(BackgroundImage, rectangle);
+
+            // Different drawing depending of game.State
+            switch (State)
+            {
+                // Pause
+                case GameStates.Pause:
+                    menu.DrawPause(g);
+                    break;
+
+                // Lost
+                case GameStates.Lost:
+                    menu.DrawLost(g);
+                    break;
+
+                // Won
+                case GameStates.Win:
+                    menu.DrawWin(g);
+                    break;
+
+                // Play
+                case GameStates.Play:
+                    // draw all objects from the main game
+                    foreach (GameObject gameObject in gameObjects)
+                    gameObject.Draw(this, g);
+                    break;
+
+                // Menu
+                case GameStates.Menu:
+                    menu.DrawMainMenu(g);
+                    break;
+
+                // Default
+                default:
+                    Console.WriteLine("You shouldn't be there.");
+                    break;
+            }
         }
 
         /// <summary>
@@ -254,7 +293,7 @@ namespace SpaceInvaders
             // add new game objects
             gameObjects.UnionWith(pendingNewGameObjects);
             pendingNewGameObjects.Clear();
-          
+
             //// if space is pressed DEBUG SPAWN BALLE QUI TOMBE
             //if (keyPressed.Contains(Keys.Space))
             //{
@@ -266,14 +305,14 @@ namespace SpaceInvaders
             //    ReleaseKey(Keys.Space);
             //}
 
-            //launch the game when Enter is pressed
-            if (keyPressed.Contains(Keys.Enter) && State == GameStates.Initial)
-            {
-                State = GameStates.Play;
-                ReleaseKey(Keys.Enter);
-            }
+
+            // Taking care of all game cases below
+
+            //Update Menu -> takes care of all the menu tasks
+            menu.UpdateMenu(deltaT, keyPressed);
+
             //DEBUG SPAWN MISSILE
-            else if (keyPressed.Contains(Keys.Down))
+            if (keyPressed.Contains(Keys.Down))
             {
                 // create new BalleQuiTombe
                 GameObject newObject = new Missile(new Vecteur2D(PlayerShip.Position.x, 0), 100, 150, Properties.Resources.shoot2, Side.Neutral);
@@ -281,28 +320,14 @@ namespace SpaceInvaders
                 AddNewGameObject(newObject);
                 // release key space (no autofire)
                 ReleaseKey(Keys.Down);
-            }
+            } // DEBUG ^^^
 
-            //Switch the game to Play or Pause if p key is pressed
-            else if (keyPressed.Contains(Keys.P) && State == GameStates.Pause)
-            {
-                State = GameStates.Play;
-                ReleaseKey(Keys.P);
-            }
-            else if (keyPressed.Contains(Keys.P) && State == GameStates.Play)
-            {
-                State = GameStates.Pause;
-                ReleaseKey(Keys.P);
-            }
-            //Don't update the gameOjects if the game is in Pause's state
-            else if (State == GameStates.Pause || State == GameStates.Initial)
-            {
-                return;
-            }
-            else if (!Enemies.enemyships.Any() && State != GameStates.Win)
+            //Win if all ships are destroyed
+            if (!Enemies.enemyships.Any() && State != GameStates.Win)
             {
                 State = GameStates.Win;
             }
+            //Lose if ally ship is destroyed
             else if (!PlayerShip.IsAlive() && State != GameStates.Lost)
             {
                 State = GameStates.Lost;
@@ -310,14 +335,14 @@ namespace SpaceInvaders
             else if (keyPressed.Contains(Keys.Space) && ( State == GameStates.Lost || State == GameStates.Win)){
                 this.ResetGame();
             }
-
-
-            // update each game object
-            foreach (GameObject gameObject in gameObjects)
+            // update each game object if we're playing
+            else if (State == GameStates.Play)
             {
-                gameObject.Update(this, deltaT);
+                foreach (GameObject gameObject in gameObjects)
+                {
+                    gameObject.Update(this, deltaT);
+                }
             }
-             
 
             // remove dead objects
             gameObjects.RemoveWhere(gameObject => {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
@@ -21,7 +22,20 @@ namespace SpaceInvaders
 
         public Game game;
 
-        public HashSet<string> menuItems = new HashSet<string>();
+        List<string> menuItems = new List<string>
+        {
+            "Jouer",
+            "Parametres",
+            "Records"
+        };
+
+        string selectedItem;
+
+
+        SolidBrush brush = new SolidBrush(Color.White);
+        PrivateFontCollection privateFontCollection = new PrivateFontCollection();
+        IntPtr fontBuffer = Marshal.UnsafeAddrOfPinnedArrayElement(Properties.Resources.space_invaders_font, 0);
+        Font font;
 
 
         /// <summary>
@@ -44,45 +58,101 @@ namespace SpaceInvaders
         private Menu(Game game)
         {
             this.game = game;
+
+            selectedItem = menuItems[0];
+
+            privateFontCollection.AddMemoryFont(fontBuffer, Properties.Resources.space_invaders_font.Length);
+            font = new Font(privateFontCollection.Families[0], 22);
         }
 
-        public void UpdateMenu(Graphics g)
+        internal void DrawPause(Graphics g)
         {
-            Image BackgroundImage = Properties.Resources.background;
-            Rectangle rectangle = new Rectangle(0, 0, game.GameSize.Width, game.GameSize.Height);
-            g.DrawImage(BackgroundImage, rectangle);
-            SolidBrush brush = new SolidBrush(Color.White);
-            PrivateFontCollection privateFontCollection = new PrivateFontCollection();
-            IntPtr fontBuffer = Marshal.UnsafeAddrOfPinnedArrayElement(Properties.Resources.space_invaders_font, 0);
-            privateFontCollection.AddMemoryFont(fontBuffer, Properties.Resources.space_invaders_font.Length);
+            g.DrawString("PAUSE", font, brush, game.GameSize.Width / 2 - 40, game.GameSize.Height / 2 - 24);
+        }
 
-            // Draw "PAUSE" in the windows if the game is in Pause state 
-            if (game.State == Game.GameStates.Pause) // TODO : réfléchir si on passe de Game.GameStates à Menu.GameStates
-            {
-                Font font = new Font(privateFontCollection.Families[0], 22);
-                g.DrawString("PAUSE", font, brush, game.GameSize.Width / 2 - 40, game.GameSize.Height / 2 - 24);
+        internal void DrawLost(Graphics g)
+        {
+            font = new Font(privateFontCollection.Families[0], 16);
+            g.DrawString($"YOU LOOSE ! (press <space> to retry)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 240, game.GameSize.Height / 2 - 24);
+        }
 
-            }
-            else if (game.State == Game.GameStates.Lost)
-            {
-                Font font = new Font(privateFontCollection.Families[0], 16);
-                g.DrawString($"YOU LOOSE ! (press <space> to retry)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 240, game.GameSize.Height / 2 - 24);
-            }
-            else if (game.State == Game.GameStates.Win)
-            {
-                Font font = new Font(privateFontCollection.Families[0], 16);
-                g.DrawString($"YOU WIN ! (press <space> to retry)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 240, game.GameSize.Height / 2 - 24);
-            }
+        internal void DrawWin(Graphics g)
+        {
+            font = new Font(privateFontCollection.Families[0], 16);
+            g.DrawString($"YOU WIN ! (press <space> to retry)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 240, game.GameSize.Height / 2 - 24);
+        }
 
-            if (game.State != Game.GameStates.Initial) // TODO : créer une fonction DrawAllGameObjects et l'appeler ici
+        internal void DrawMainMenu(Graphics g)
+        {
+            Font font = new Font(privateFontCollection.Families[0], 14);
+            //g.DrawString("PRESS <ENTER> TO START", font, brush, game.GameSize.Width / 2 - 140, game.GameSize.Height / 2 - 24);
+
+
+            int pos = game.GameSize.Height / 2 - 24;
+            foreach (var item in menuItems)
             {
-                foreach (GameObject gameObject in game.gameObjects)
-                    gameObject.Draw(game, g);
+                if (item == selectedItem)
+                {
+                    brush.Color = Color.Red;
+                }
+                else
+                {
+                    brush.Color = Color.Gray;
+                }
+                g.DrawString($"{item}", font, brush, game.GameSize.Width / 2 - 40, pos);
+                pos += 50;
             }
-            else
+        }
+
+        internal void UpdateMenu(double deltaT, HashSet<Keys> keyPressed)
+        {
+            switch (Game.game.State)
             {
-                Font font = new Font(privateFontCollection.Families[0], 14);
-                g.DrawString("PRESS <ENTER> TO START", font, brush, game.GameSize.Width / 2 - 140, game.GameSize.Height / 2 - 24);
+                // Navigation dans le Menu
+                case Game.GameStates.Menu:
+                    if (keyPressed.Contains(Keys.Up))
+                    {
+                        selectedItem = menuItems[(menuItems.IndexOf(selectedItem) - 1 + menuItems.Count()) % menuItems.Count()];
+                        keyPressed.Remove(Keys.Up);
+
+                    }
+                    if (keyPressed.Contains(Keys.Down))
+                    {
+                        selectedItem = menuItems[(menuItems.IndexOf(selectedItem) + 1 + menuItems.Count()) % menuItems.Count()];
+                        keyPressed.Remove(Keys.Down);
+                    }
+                    if (keyPressed.Contains(Keys.Enter) && game.State == Game.GameStates.Menu)
+                    {
+                        if (selectedItem == menuItems[0])
+                        {
+                            game.State = Game.GameStates.Play;
+                        }
+                        keyPressed.Remove(Keys.Enter);
+                    }
+
+                    break;
+
+                //Switch the game to Play or Pause if p key is pressed
+                case Game.GameStates.Pause:
+                    if (keyPressed.Contains(Keys.P))
+                    {
+                        Game.game.State = Game.GameStates.Play;
+                        keyPressed.Remove(Keys.P);
+                    }
+                    break;
+
+                case Game.GameStates.Play:
+                    if (keyPressed.Contains(Keys.P))
+                    {
+                        Game.game.State = Game.GameStates.Pause;
+                        keyPressed.Remove(Keys.P);
+                    }
+                    break;
+
+
+                default:
+                    Console.WriteLine("DEFAULT");
+                    break;
             }
         }
     }
