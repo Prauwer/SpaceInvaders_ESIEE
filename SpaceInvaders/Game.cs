@@ -31,7 +31,7 @@ namespace SpaceInvaders
             Pause,
             Won,
             Lost,
-            Settings,
+            Controls,
             HighScore
         }
 
@@ -319,9 +319,9 @@ namespace SpaceInvaders
                     menu.DrawMainMenu(g);
                     break;
 
-                // Settings
-                case GameStates.Settings:
-                    menu.DrawSettings(g);
+                // Controls
+                case GameStates.Controls:
+                    menu.DrawControls(g);
                     break;
 
                 case GameStates.HighScore:

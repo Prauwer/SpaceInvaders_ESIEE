@@ -27,7 +27,7 @@ namespace SpaceInvaders
         List<string> menuItems = new List<string>
         {
             "Play",
-            "Settings",
+            "Controls",
             "High Score"
         };
 
@@ -35,10 +35,15 @@ namespace SpaceInvaders
 
         SoundPlayer soundPlayer;
 
+        // Drawing variables
         SolidBrush brush = new SolidBrush(Color.White);
+
         PrivateFontCollection privateFontCollection = new PrivateFontCollection();
         IntPtr fontBuffer = Marshal.UnsafeAddrOfPinnedArrayElement(Properties.Resources.space_invaders_font, 0);
         Font font;
+
+        RectangleF drawingArea;
+        StringFormat stringFormat;
 
 
         /// <summary>
@@ -64,8 +69,15 @@ namespace SpaceInvaders
 
             selectedItem = menuItems[0];
 
+            // Drawing font
             privateFontCollection.AddMemoryFont(fontBuffer, Properties.Resources.space_invaders_font.Length);
-            font = new Font(privateFontCollection.Families[0], 22);
+            font = new Font(privateFontCollection.Families[0], 16);
+
+            // Make string drawn centered
+            drawingArea = new RectangleF(0, 0, game.GameSize.Width, game.GameSize.Height);
+            stringFormat = new StringFormat();
+            stringFormat.Alignment = StringAlignment.Center;
+            stringFormat.LineAlignment = StringAlignment.Center;
         }
 
         public void PlayMenuMusic()
@@ -136,26 +148,44 @@ namespace SpaceInvaders
         {
             PlayLostMusic();
 
-            font = new Font(privateFontCollection.Families[0], 16);
-            g.DrawString($"YOU LOSE!\n(press <ENTER> to go to the Main Menu)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 260, game.GameSize.Height / 2 - 24);
+            string text = $"YOU LOSE!\n(press <ENTER> to go to the Main Menu)\n\n" +
+                $"{game.PlayerShip.Points} Points";
+            g.DrawString(text, font, brush, drawingArea, stringFormat);
         }
 
         internal void DrawWon(Graphics g)
         {
             PlayWonMusic();
 
-            font = new Font(privateFontCollection.Families[0], 16);
-            g.DrawString($"YOU WIN!\n(press <ENTER> to go to the Main Menu\nor press <SPACE> to continue playing)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 260, game.GameSize.Height / 2 - 24);
+            string text = $"YOU WIN!\n(press <ENTER> to go to the Main Menu\n" +
+                $"or press <SPACE> to continue playing)\n\n" +
+                $"{game.PlayerShip.Points} Points";
+            g.DrawString(text, font, brush, drawingArea, stringFormat);
         }
-        internal void DrawSettings(Graphics g)
+        internal void DrawControls(Graphics g)
         {
-            font = new Font(privateFontCollection.Families[0], 16);
-            g.DrawString("COMING SOON\n(press <ENTER> to go to the Main Menu)", font, brush, game.GameSize.Width / 2 - 260, game.GameSize.Height / 2 - 24);
+            //string text = "COMING SOON\n(press <ENTER> to go to the Main Menu)";
+
+            string text = "Use <LEFT> and <RIGHT> arrows to move your ship :           \0\n" +
+                "Use <UP> arrow to shoot enemy ships\n" +
+                "Use <DOWN> arrow to drop a missile coming from the sky if you have one :           \0\n" +
+                "\n(press <ENTER> to go to the Main Menu)";
+
+
+            g.DrawString(text, font, brush, drawingArea, stringFormat);
+
+            g.DrawImage(Properties.Resources.ship3, game.GameSize.Width / 2 + 50, game.GameSize.Height / 2 - 75, 25, 25);
+            g.DrawImage(Properties.Resources.shoot2, game.GameSize.Width / 2 + 170, game.GameSize.Height / 2 + 10, 25, 40);
+
+
+
         }
 
         internal void DrawHighScore(Graphics g)
         {
-            g.DrawString($"HIGH SCORE: {game.HighScore}\n(press <ENTER> to go to the Main Menu)", font, brush, game.GameSize.Width / 2 - 260, game.GameSize.Height / 2 - 24);
+            string text = $"HIGH SCORE: {game.HighScore}\n" +
+                $"(press <ENTER> to go to the Main Menu)";
+            g.DrawString(text, font, brush, drawingArea, stringFormat);
         }
 
         internal void DrawMainMenu(Graphics g)
@@ -169,7 +199,6 @@ namespace SpaceInvaders
             g.DrawImage(BackgroundImage, rectangle);
 
             // Affichage du texte
-            Font font = new Font(privateFontCollection.Families[0], 14);
             g.DrawString("PRESS <ENTER> TO SELECT", font, brush, game.GameSize.Width / 2 - 150, game.GameSize.Height / 2 + 60);
 
             // Affichage du menu selectif
@@ -216,7 +245,7 @@ namespace SpaceInvaders
                         }
                         else if (selectedItem == menuItems[1])
                         {
-                            game.State = Game.GameStates.Settings;
+                            game.State = Game.GameStates.Controls;
                         }
                         else if (selectedItem == menuItems[2])
                         {
@@ -227,7 +256,7 @@ namespace SpaceInvaders
 
                     break;
 
-                case Game.GameStates.Settings:
+                case Game.GameStates.Controls:
                     if (keyPressed.Contains(Keys.Enter))
                     {
                         game.State = Game.GameStates.Menu;
