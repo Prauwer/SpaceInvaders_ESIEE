@@ -164,8 +164,6 @@ namespace SpaceInvaders
         }
         internal void DrawControls(Graphics g)
         {
-            //string text = "COMING SOON\n(press <ENTER> to go to the Main Menu)";
-
             string text = "Use <LEFT> and <RIGHT> arrows to move your ship :           \0\n" +
                 "Use <UP> arrow to shoot enemy ships\n" +
                 "Use <DOWN> arrow to drop a missile coming from the sky if you have one :           \0\n" +
