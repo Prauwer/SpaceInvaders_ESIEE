@@ -44,6 +44,8 @@ namespace SpaceInvaders
             {
                 p.Lives = 0;
                 this.Lives = 0;
+
+                Game.game.PlayerShip.handleBonus(this);
             }
         }
     }

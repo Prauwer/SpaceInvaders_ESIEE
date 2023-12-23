@@ -73,9 +73,10 @@ namespace SpaceInvaders
         /// <param name="numberOfPixelsInCollision">number of pixels in collision with the player spaceship</param>
         protected override void OnCollision(Projectile p, int numberOfPixelsInCollision)
         {
-            if (p is LifeBonus)
+            if (p is LifeBonus || p is MissileBonus)
             {
                 p.Lives = 0;
+                handleBonus(p);
             }
             else
             {

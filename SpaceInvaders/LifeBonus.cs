@@ -42,6 +42,8 @@ namespace SpaceInvaders
         {
             if (p.Side == Side.Ally)
             {
+                Game.game.PlayerShip.handleBonus(this);
+
                 p.Lives = 0;
                 this.Lives = 0;
             }

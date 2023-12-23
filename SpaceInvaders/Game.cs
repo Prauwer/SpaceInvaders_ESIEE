@@ -399,7 +399,6 @@ namespace SpaceInvaders
             gameObjects.RemoveWhere(gameObject => {
                 if (!gameObject.IsAlive())
                 {
-                    PlayerShip.handleBonus(gameObject);
                     PlayerShip.handleEnnemieDie(gameObject, rand, this);
                 }
                 return !gameObject.IsAlive();
