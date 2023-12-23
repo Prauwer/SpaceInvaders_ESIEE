@@ -139,7 +139,16 @@ namespace SpaceInvaders
             menu = Menu.CreateMenu(this);
 
             // Game objects creation
-            ResetGame();
+            this.GameSize = gameSize;
+
+            // Création du bloc d'ennemis
+            this.EnemiesBlockCreation();
+
+            // Creation du vaisseau
+            this.PlayerSpaceShipCreation();
+
+            // Création des bunkers
+            this.BunkersCreation();
         }
 
         #endregion
@@ -340,7 +349,7 @@ namespace SpaceInvaders
             menu.UpdateMenu(deltaT, keyPressed);
 
             // spawn super missile if the player have missile in stock
-            else if (keyPressed.Contains(Keys.Down) && PlayerShip.MissileCounter > 0)
+            if (keyPressed.Contains(Keys.Down) && PlayerShip.MissileCounter > 0)
             {
                 // create new Missile
                 GameObject newObject = new Missile(new Vecteur2D(PlayerShip.Position.x, 0), 100, 150, Resources.shoot2, Side.Ally);
