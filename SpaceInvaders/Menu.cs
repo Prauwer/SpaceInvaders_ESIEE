@@ -174,9 +174,6 @@ namespace SpaceInvaders
 
             g.DrawImage(Properties.Resources.ship3, game.GameSize.Width / 2 + 50, game.GameSize.Height / 2 - 75, 25, 25);
             g.DrawImage(Properties.Resources.shoot2, game.GameSize.Width / 2 + 170, game.GameSize.Height / 2 + 10, 25, 40);
-
-
-
         }
 
         internal void DrawHighScore(Graphics g)
