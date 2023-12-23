@@ -6,12 +6,13 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SpaceInvaders
 {
     internal class SpaceShip : SimpleObject
     {
-        public Missile Missile { get; private set; }
+        public Projectile Missile { get; private set; }
 
         public SpaceShip(Vecteur2D position, int lives, Bitmap image, Side side): base(side)
         {
@@ -26,6 +27,12 @@ namespace SpaceInvaders
 
         }
 
+        /// <summary>
+        /// shoot a missile
+        /// </summary>
+        /// <param name="direction">direction (up or down)</param>
+        /// <param name="side">side (ally or enemy)</param>
+        /// <param name="gameInstance">instance of the current game</param>
         public void Shoot(Game gameInstance, int direction, Side side)
         {
             if (Missile == null || !Missile.IsAlive())
@@ -39,7 +46,12 @@ namespace SpaceInvaders
             }
         }
 
-        protected override void OnCollision(Missile m, int numberOfPixelsInCollision)
+        /// <summary>
+        /// handle the case of the spaceship is hitted
+        /// </summary>
+        /// <param name="p">projectile in collision with the spaceship</param>
+        /// <param name="numberOfPixelsInCollision">number of pixels in collision with the spaceship</param>
+        protected override void OnCollision(Projectile m, int numberOfPixelsInCollision)
         {
             int damage = Math.Min(m.Lives, this.Lives);
             m.Lives -= damage;

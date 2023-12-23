@@ -12,6 +12,7 @@ namespace SpaceInvaders
         Ally,
         Enemy,
         Neutral,
+        Bonus,
     }
 
     /// <summary>
@@ -53,6 +54,11 @@ namespace SpaceInvaders
         /// <returns>Am I alive ?</returns>
         public abstract bool IsAlive();
 
-        public abstract void Collision(Missile m);
+        /// <summary>
+        /// Determines an projectile is in collision of the game object
+        /// </summary>
+        /// <oaram name="p">projectile to check</oaram>
+        /// <returns>Am I alive ?</returns>
+        public abstract void Collision(Projectile p);
     }
 }

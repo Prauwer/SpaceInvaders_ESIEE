@@ -2,23 +2,21 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SpaceInvaders
 {
-    internal class Missile : Projectile
+    internal class LifeBonus : Projectile
     {
-
-        //Constructeur
-        public Missile(Vecteur2D position, double speed, int lives, Bitmap image, Side side) : base(position, speed, lives, image, side)
+        public LifeBonus(Vecteur2D position, double speed, Side side) : base(position, speed, 1, Properties.Resources.bonus, side)
         {
         }
 
-        //Méthodes
-
         /// <summary>
-        /// Update the state of the Missile
+        /// Update the state of the Life Bonus
         /// </summary>
         /// <param name="gameInstance">instance of the current game</param>
         /// <param name="deltaT">time ellapsed in seconds since last call to Update</param>
@@ -28,7 +26,7 @@ namespace SpaceInvaders
             // Test collision avec les objets du jeu
             foreach (GameObject gameObject in gameInstance.gameObjects)
             {
-                if (gameObject != this)
+                if (gameObject.GetType() == typeof(PlayerSpaceship))
                 {
                     gameObject.Collision(this);
                 }
@@ -36,14 +34,17 @@ namespace SpaceInvaders
         }
 
         /// <summary>
-        /// handle the case of the missile is hitted
+        /// handle the case of the life bonus is hitted
         /// </summary>
-        /// <param name="p">projectile in collision with the missile</param>
-        /// <param name="numberOfPixelsInCollision">number of pixels in collision with the missile</param>
+        /// <param name="p">projectile in collision with the bonus</param>
+        /// <param name="numberOfPixelsInCollision">number of pixels in collision with the bonus</param>
         protected override void OnCollision(Projectile p, int numberOfPixelsInCollision)
         {
-            p.Lives = 0;
-            this.Lives = 0;
+            if (p.Side == Side.Ally)
+            {
+                p.Lives = 0;
+                this.Lives = 0;
+            }
         }
     }
 }
