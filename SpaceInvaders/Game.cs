@@ -24,6 +24,19 @@ namespace SpaceInvaders
         /// </summary>
         public HashSet<GameObject> gameObjects = new HashSet<GameObject>();
 
+        public enum GameStates
+        {
+            Menu,
+            Play,
+            Pause,
+            Won,
+            Lost,
+            Settings,
+            HighScore
+        }
+
+        public GameStates State;
+
         /// <summary>
         /// Set of new game objects scheduled for addition to the game
         /// </summary>
@@ -41,17 +54,6 @@ namespace SpaceInvaders
         #endregion
 
         #region game technical elements
-
-        public enum GameStates
-        {
-            Initial,
-            Play,
-            Pause,
-            Win,
-            Lost,
-        }
-
-        public GameStates State;
 
         public int WaveCounter = 0;
 
@@ -90,6 +92,16 @@ namespace SpaceInvaders
         public static Game game { get; private set; }
 
         /// <summary>
+        /// Singleton for easy access
+        /// </summary>
+        public static Menu menu { get; private set; }
+
+        /// <summary>
+        /// Singleton for easy access
+        /// </summary>
+        public int HighScore { get; internal set; }
+
+        /// <summary>
         /// A shared black brush
         /// </summary>
         private static Brush blackBrush = new SolidBrush(Color.Black);
@@ -123,14 +135,11 @@ namespace SpaceInvaders
         {
             this.GameSize = gameSize;
 
-            // Création du bloc d'ennemis
-            this.EnemiesBlockCreation();
+            // Menu creation
+            menu = Menu.CreateMenu(this);
 
-            // Creation du vaisseau
-            this.PlayerSpaceShipCreation();
-
-            // Création des bunkers
-            this.BunkersCreation();
+            // Game objects creation
+            ResetGame();
         }
 
         #endregion
@@ -209,7 +218,7 @@ namespace SpaceInvaders
             this.TriggerCreation();
         }
 
-        private void ResetGame()
+        public void ResetGame()
         {
             // Suppression tous les objets du jeu
             this.Enemies = null;
@@ -236,9 +245,6 @@ namespace SpaceInvaders
 
             // Création des bunkers
             this.BunkersCreation();
-
-            State = GameStates.Play;
-
         }
 
         /// <summary>
@@ -258,13 +264,11 @@ namespace SpaceInvaders
         /// <param name="g">Graphics to draw in</param>
         public void Draw(Graphics g)
         {
-            Image BackgroundImage = Resources.background;
-            Rectangle backgroundRectangle = new Rectangle(0, 0, GameSize.Width, GameSize.Height);
-            g.DrawImage(BackgroundImage, backgroundRectangle);
-            SolidBrush brush = new SolidBrush(Color.White);
-            PrivateFontCollection privateFontCollection = new PrivateFontCollection();
-            IntPtr fontBuffer = Marshal.UnsafeAddrOfPinnedArrayElement(Resources.space_invaders_font, 0);
-            privateFontCollection.AddMemoryFont(fontBuffer, Resources.space_invaders_font.Length);
+
+            // Background drawing
+            Image BackgroundImage = Properties.Resources.background;
+            Rectangle rectangle = new Rectangle(0, 0, game.GameSize.Width, game.GameSize.Height);
+            g.DrawImage(BackgroundImage, rectangle);
 
             int missileWidth = 10;
             for (int i = 0; i<PlayerShip.MissileCounter; i++)
@@ -274,33 +278,50 @@ namespace SpaceInvaders
                 missileWidth += Resources.shoot2.Width + 5;
 
             }
-            
-            // Draw "PAUSE" in the windows if the game is in Pause state 
-            if (State == GameStates.Pause) {
-                Font font = new Font(privateFontCollection.Families[0], 22);
-                g.DrawString("PAUSE", font, brush, GameSize.Width / 2 - 40, GameSize.Height / 2 - 24);
 
-            }
-            else if (State == GameStates.Lost)
+            // Different drawing depending of game.State
+            switch (State)
             {
-                Font font = new Font(privateFontCollection.Families[0], 16);
-                g.DrawString($"YOU LOOSE ! (press <space> to retry)\n{PlayerShip.Points} Points", font, brush, GameSize.Width / 2 - 240, GameSize.Height / 2 - 24);
-            }
-            else if (State == GameStates.Win)
-            {
-                Font font = new Font(privateFontCollection.Families[0], 16);
-                g.DrawString($"YOU WIN ! (press <space> to retry)\n{PlayerShip.Points} Points", font, brush, GameSize.Width / 2 - 240, GameSize.Height / 2 - 24);
-            }
+                // Pause
+                case GameStates.Pause:
+                    menu.DrawPause(g);
+                    break;
 
-            else if (State != GameStates.Initial)
-            {
-                foreach (GameObject gameObject in gameObjects)
+                // Lost
+                case GameStates.Lost:
+                    menu.DrawLost(g);
+                    break;
+
+                // Won
+                case GameStates.Won:
+                    menu.DrawWon(g);
+                    break;
+
+                // Play
+                case GameStates.Play:
+                    // draw all objects from the main game
+                    foreach (GameObject gameObject in gameObjects)
                     gameObject.Draw(this, g);
-            }
-            else
-            {
-                Font font = new Font(privateFontCollection.Families[0], 14);
-                g.DrawString("PRESS <ENTER> TO START", font, brush, GameSize.Width / 2 - 140, GameSize.Height / 2 - 24);
+                    break;
+
+                // Menu
+                case GameStates.Menu:
+                    menu.DrawMainMenu(g);
+                    break;
+
+                // Settings
+                case GameStates.Settings:
+                    menu.DrawSettings(g);
+                    break;
+
+                case GameStates.HighScore:
+                    menu.DrawHighScore(g);
+                    break;
+
+                // Default
+                default:
+                    Console.WriteLine("You shouldn't be there.");
+                    break;
             }
         }
 
@@ -309,16 +330,15 @@ namespace SpaceInvaders
         /// </summary>
         public void Update(double deltaT)
         {
-            // add new game objects
+            // add pending game objects
             gameObjects.UnionWith(pendingNewGameObjects);
             pendingNewGameObjects.Clear();
 
-            //launch the game when Enter is pressed
-            if (keyPressed.Contains(Keys.Enter) && State == GameStates.Initial)
-            {
-                State = GameStates.Play;
-                ReleaseKey(Keys.Enter);
-            }
+            // Taking care of all game cases below
+
+            //Update Menu -> takes care of all the menu tasks
+            menu.UpdateMenu(deltaT, keyPressed);
+
             // spawn super missile if the player have missile in stock
             else if (keyPressed.Contains(Keys.Down) && PlayerShip.MissileCounter > 0)
             {
@@ -340,41 +360,25 @@ namespace SpaceInvaders
                 ReleaseKey(Keys.B);
             }
 
-            //Switch the game to Play or Pause if p key is pressed
-            else if (keyPressed.Contains(Keys.P) && State == GameStates.Pause)
+            //Win if all ships are destroyed
+            if (!Enemies.enemyships.Any() && State != GameStates.Won)
             {
-                State = GameStates.Play;
-                ReleaseKey(Keys.P);
+                State = GameStates.Won;
             }
-            else if (keyPressed.Contains(Keys.P) && State == GameStates.Play)
-            {
-                State = GameStates.Pause;
-                ReleaseKey(Keys.P);
-            }
-            //Don't update the gameOjects if the game is in Pause's state
-            else if (State == GameStates.Pause || State == GameStates.Initial)
-            {
-                return;
-            }
-            else if (!Enemies.enemyships.Any() && State != GameStates.Win)
-            {
-                State = GameStates.Win;
-            }
+            //Lose if ally ship is destroyed
             else if (!PlayerShip.IsAlive() && State != GameStates.Lost)
             {
                 State = GameStates.Lost;
             }
-            else if (keyPressed.Contains(Keys.Space) && ( State == GameStates.Lost || State == GameStates.Win)){
-                this.ResetGame();
-            }
 
-
-            // update each game object
-            foreach (GameObject gameObject in gameObjects)
+            // update each game object if we're playing
+            if (State == GameStates.Play)
             {
-                gameObject.Update(this, deltaT);
+                foreach (GameObject gameObject in gameObjects)
+                {
+                    gameObject.Update(this, deltaT);
+                }
             }
-             
 
             // remove dead objects
             Random rand = new Random();
