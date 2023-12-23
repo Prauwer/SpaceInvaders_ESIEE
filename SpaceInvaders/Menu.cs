@@ -79,7 +79,7 @@ namespace SpaceInvaders
         internal void DrawWon(Graphics g)
         {
             font = new Font(privateFontCollection.Families[0], 16);
-            g.DrawString($"YOU WIN!\n(press <ENTER> to go to the Main Menu)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 260, game.GameSize.Height / 2 - 24);
+            g.DrawString($"YOU WIN!\n(press <ENTER> to go to the Main Menu\nor press <SPACE> to continue playing)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 260, game.GameSize.Height / 2 - 24);
         }
         internal void DrawSettings(Graphics g)
         {
@@ -207,6 +207,11 @@ namespace SpaceInvaders
                         game.ResetGame();
                         game.State = Game.GameStates.Menu;
                         keyPressed.Remove(Keys.Enter);
+                    }
+                    else if (keyPressed.Contains(Keys.Space)) {
+                        game.ResetGame();
+                        game.State = Game.GameStates.Play;
+                        keyPressed.Remove(Keys.Space);
                     }
                     break;
 

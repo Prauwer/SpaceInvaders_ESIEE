@@ -233,6 +233,7 @@ namespace SpaceInvaders
             this.Enemies = null;
             this.gameObjects.Clear();
             this.gameObjects.Add(this.PlayerShip);
+            this.PlayerShip.Missile = null;
 
             if (State == GameStates.Lost)
             {
@@ -245,7 +246,7 @@ namespace SpaceInvaders
             {
                 // Incrémentation du compteur de vagues
                 WaveCounter++;
-                PlayerShip.Lives += 50;
+                PlayerShip.Lives += Math.Min(50, PlayerShip.InitialLives - PlayerShip.Lives);
             }
             
 

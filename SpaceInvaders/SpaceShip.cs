@@ -12,7 +12,7 @@ namespace SpaceInvaders
 {
     internal class SpaceShip : SimpleObject
     {
-        public Projectile Missile { get; private set; }
+        public Projectile Missile;
 
         public SpaceShip(Vecteur2D position, int lives, Bitmap image, Side side): base(side)
         {
