@@ -24,9 +24,9 @@ namespace SpaceInvaders
 
         List<string> menuItems = new List<string>
         {
-            "Jouer",
-            "Parametres",
-            "Records"
+            "Play",
+            "Settings",
+            "High Score"
         };
 
         string selectedItem;
@@ -73,14 +73,23 @@ namespace SpaceInvaders
         internal void DrawLost(Graphics g)
         {
             font = new Font(privateFontCollection.Families[0], 16);
-            g.DrawString($"YOU LOSE!\n(press <space> to go to the Main Menu)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 260, game.GameSize.Height / 2 - 24);
+            g.DrawString($"YOU LOSE!\n(press <ENTER> to go to the Main Menu)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 260, game.GameSize.Height / 2 - 24);
         }
 
         internal void DrawWon(Graphics g)
         {
             font = new Font(privateFontCollection.Families[0], 16);
-            g.DrawString($"YOU WIN!\n(press <space> to go tothe Main Menu)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 260, game.GameSize.Height / 2 - 24);
+            g.DrawString($"YOU WIN!\n(press <ENTER> to go to the Main Menu)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 260, game.GameSize.Height / 2 - 24);
+        }
+        internal void DrawSettings(Graphics g)
+        {
+            font = new Font(privateFontCollection.Families[0], 16);
+            g.DrawString("COMING SOON\n(press <ENTER> to go to the Main Menu)", font, brush, game.GameSize.Width / 2 - 260, game.GameSize.Height / 2 - 24);
+        }
 
+        internal void DrawHighScore(Graphics g)
+        {
+            g.DrawString($"HIGH SCORE: {game.HighScore}\n(press <ENTER> to go to the Main Menu)", font, brush, game.GameSize.Width / 2 - 260, game.GameSize.Height / 2 - 24);
         }
 
         internal void DrawMainMenu(Graphics g)
@@ -130,16 +139,41 @@ namespace SpaceInvaders
                         selectedItem = menuItems[(menuItems.IndexOf(selectedItem) + 1 + menuItems.Count()) % menuItems.Count()];
                         keyPressed.Remove(Keys.Down);
                     }
-                    if (keyPressed.Contains(Keys.Enter) && game.State == Game.GameStates.Menu)
+                    if (keyPressed.Contains(Keys.Enter))
                     {
                         if (selectedItem == menuItems[0])
                         {
                             game.State = Game.GameStates.Play;
                         }
+                        else if (selectedItem == menuItems[1])
+                        {
+                            game.State = Game.GameStates.Settings;
+                        }
+                        else if (selectedItem == menuItems[2])
+                        {
+                            game.State = Game.GameStates.HighScore;
+                        }
                         keyPressed.Remove(Keys.Enter);
                     }
 
                     break;
+
+                case Game.GameStates.Settings:
+                    if (keyPressed.Contains(Keys.Enter))
+                    {
+                        game.State = Game.GameStates.Menu;
+                    }
+                    keyPressed.Remove(Keys.Enter);
+                    break;
+
+                case Game.GameStates.HighScore:
+                    if (keyPressed.Contains(Keys.Enter))
+                    {
+                        game.State = Game.GameStates.Menu;
+                    }
+                    keyPressed.Remove(Keys.Enter);
+                    break;
+
 
                 //Switch the game to Play or Pause if p key is pressed
                 case Game.GameStates.Pause:
@@ -159,20 +193,20 @@ namespace SpaceInvaders
                     break;
 
                 case Game.GameStates.Lost:
-                    if (keyPressed.Contains(Keys.Space))
+                    if (keyPressed.Contains(Keys.Enter))
                     {
                         game.ResetGame();
                         game.State = Game.GameStates.Menu;
-                        keyPressed.Remove(Keys.Space);
+                        keyPressed.Remove(Keys.Enter);
                     }
                     break;
 
                 case Game.GameStates.Won:
-                    if (keyPressed.Contains(Keys.Space))
+                    if (keyPressed.Contains(Keys.Enter))
                     {
                         game.ResetGame();
                         game.State = Game.GameStates.Menu;
-                        keyPressed.Remove(Keys.Space);
+                        keyPressed.Remove(Keys.Enter);
                     }
                     break;
 

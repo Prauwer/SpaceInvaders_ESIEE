@@ -30,6 +30,8 @@ namespace SpaceInvaders
             Pause,
             Won,
             Lost,
+            Settings,
+            HighScore
         }
 
         public GameStates State;
@@ -90,6 +92,11 @@ namespace SpaceInvaders
         /// Singleton for easy access
         /// </summary>
         public static Menu menu { get; private set; }
+
+        /// <summary>
+        /// Singleton for easy access
+        /// </summary>
+        public int HighScore { get; internal set; }
 
         /// <summary>
         /// A shared black brush
@@ -265,6 +272,15 @@ namespace SpaceInvaders
                     menu.DrawMainMenu(g);
                     break;
 
+                // Settings
+                case GameStates.Settings:
+                    menu.DrawSettings(g);
+                    break;
+
+                case GameStates.HighScore:
+                    menu.DrawHighScore(g);
+                    break;
+
                 // Default
                 default:
                     Console.WriteLine("You shouldn't be there.");
@@ -308,13 +324,9 @@ namespace SpaceInvaders
             {
                 State = GameStates.Lost;
             }
-            // TODO : bouger ça proprement ptdr
-            /*else if (keyPressed.Contains(Keys.Space) && ( State == GameStates.Lost || State == GameStates.Won)){
-                this.ResetGame();
-                State = GameStates.Play;
-            }*/
+
             // update each game object if we're playing
-            else if (State == GameStates.Play)
+            if (State == GameStates.Play)
             {
                 foreach (GameObject gameObject in gameObjects)
                 {
