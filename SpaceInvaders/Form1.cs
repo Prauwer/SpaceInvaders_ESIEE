@@ -44,6 +44,7 @@ namespace SpaceInvaders
             watch.Start();
             WorldClock.Start();
 
+
         }
         #endregion
 
