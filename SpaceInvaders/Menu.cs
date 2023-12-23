@@ -73,40 +73,49 @@ namespace SpaceInvaders
         internal void DrawLost(Graphics g)
         {
             font = new Font(privateFontCollection.Families[0], 16);
-            g.DrawString($"YOU LOOSE ! (press <space> to go to the Main Menu)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 240, game.GameSize.Height / 2 - 24);
+            g.DrawString($"YOU LOSE!\n(press <space> to go to the Main Menu)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 260, game.GameSize.Height / 2 - 24);
         }
 
-        internal void DrawWin(Graphics g)
+        internal void DrawWon(Graphics g)
         {
             font = new Font(privateFontCollection.Families[0], 16);
-            g.DrawString($"YOU WIN ! (press <space> to go to the Main Menu)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 240, game.GameSize.Height / 2 - 24);
+            g.DrawString($"YOU WIN!\n(press <space> to go tothe Main Menu)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 260, game.GameSize.Height / 2 - 24);
+
         }
 
         internal void DrawMainMenu(Graphics g)
         {
-            Font font = new Font(privateFontCollection.Families[0], 14);
-            g.DrawString("PRESS <ENTER> TO START", font, brush, game.GameSize.Width / 2 - 140, game.GameSize.Height / 2 - 84);
 
+            // Affichage du logo
+            Image BackgroundImage = Properties.Resources.logo;
+            Rectangle rectangle = new Rectangle(40, 40, game.GameSize.Width-80, game.GameSize.Height*2/5);
+            g.DrawImage(BackgroundImage, rectangle);
+
+            // Affichage du texte
+            Font font = new Font(privateFontCollection.Families[0], 14);
+            g.DrawString("PRESS <ENTER> TO SELECT", font, brush, game.GameSize.Width / 2 - 150, game.GameSize.Height / 2 + 60);
+
+            // Affichage du menu selectif
             int width = game.GameSize.Width / 2;
-            int height = game.GameSize.Height / 2 - 24;
+            int height = game.GameSize.Height / 2 + 120;
             foreach (var item in menuItems)
             {
                 if (item == selectedItem)
                 {
                     // Couleur de l'item sélectionné
-                    brush.Color = Color.OrangeRed;
+                    brush.Color = ColorTranslator.FromHtml("#ffe213");
                 }
                 g.DrawString($"{item}", font, brush, width-item.Length*7.4f, height);
                 height += 50;
 
                 // Couleur par défaut du texte
-                brush.Color = Color.DarkGray;
+                brush.Color = ColorTranslator.FromHtml("#ed2c0b");
             }
         }
 
         internal void UpdateMenu(double deltaT, HashSet<Keys> keyPressed)
         {
-            switch (Game.game.State)
+            switch (game.State)
             {
                 // Navigation dans le Menu
                 case Game.GameStates.Menu:
@@ -136,7 +145,7 @@ namespace SpaceInvaders
                 case Game.GameStates.Pause:
                     if (keyPressed.Contains(Keys.P))
                     {
-                        Game.game.State = Game.GameStates.Play;
+                        game.State = Game.GameStates.Play;
                         keyPressed.Remove(Keys.P);
                     }
                     break;
@@ -144,7 +153,7 @@ namespace SpaceInvaders
                 case Game.GameStates.Play:
                     if (keyPressed.Contains(Keys.P))
                     {
-                        Game.game.State = Game.GameStates.Pause;
+                        game.State = Game.GameStates.Pause;
                         keyPressed.Remove(Keys.P);
                     }
                     break;
@@ -152,8 +161,8 @@ namespace SpaceInvaders
                 case Game.GameStates.Lost:
                     if (keyPressed.Contains(Keys.Space))
                     {
-                        Game.game.ResetGame();
-                        Game.game.State = Game.GameStates.Menu;
+                        game.ResetGame();
+                        game.State = Game.GameStates.Menu;
                         keyPressed.Remove(Keys.Space);
                     }
                     break;
@@ -161,8 +170,8 @@ namespace SpaceInvaders
                 case Game.GameStates.Won:
                     if (keyPressed.Contains(Keys.Space))
                     {
-                        Game.game.ResetGame();
-                        Game.game.State = Game.GameStates.Menu;
+                        game.ResetGame();
+                        game.State = Game.GameStates.Menu;
                         keyPressed.Remove(Keys.Space);
                     }
                     break;

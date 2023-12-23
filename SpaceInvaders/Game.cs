@@ -250,7 +250,7 @@ namespace SpaceInvaders
 
                 // Won
                 case GameStates.Won:
-                    menu.DrawWin(g);
+                    menu.DrawWon(g);
                     break;
 
                 // Play
