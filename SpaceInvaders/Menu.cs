@@ -73,34 +73,34 @@ namespace SpaceInvaders
         internal void DrawLost(Graphics g)
         {
             font = new Font(privateFontCollection.Families[0], 16);
-            g.DrawString($"YOU LOOSE ! (press <space> to retry)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 240, game.GameSize.Height / 2 - 24);
+            g.DrawString($"YOU LOOSE ! (press <space> to go to the Main Menu)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 240, game.GameSize.Height / 2 - 24);
         }
 
         internal void DrawWin(Graphics g)
         {
             font = new Font(privateFontCollection.Families[0], 16);
-            g.DrawString($"YOU WIN ! (press <space> to retry)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 240, game.GameSize.Height / 2 - 24);
+            g.DrawString($"YOU WIN ! (press <space> to go to the Main Menu)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 240, game.GameSize.Height / 2 - 24);
         }
 
         internal void DrawMainMenu(Graphics g)
         {
             Font font = new Font(privateFontCollection.Families[0], 14);
-            //g.DrawString("PRESS <ENTER> TO START", font, brush, game.GameSize.Width / 2 - 140, game.GameSize.Height / 2 - 24);
+            g.DrawString("PRESS <ENTER> TO START", font, brush, game.GameSize.Width / 2 - 140, game.GameSize.Height / 2 - 84);
 
-
-            int pos = game.GameSize.Height / 2 - 24;
+            int width = game.GameSize.Width / 2;
+            int height = game.GameSize.Height / 2 - 24;
             foreach (var item in menuItems)
             {
                 if (item == selectedItem)
                 {
-                    brush.Color = Color.Red;
+                    // Couleur de l'item sélectionné
+                    brush.Color = Color.OrangeRed;
                 }
-                else
-                {
-                    brush.Color = Color.Gray;
-                }
-                g.DrawString($"{item}", font, brush, game.GameSize.Width / 2 - 40, pos);
-                pos += 50;
+                g.DrawString($"{item}", font, brush, width-item.Length*7.4f, height);
+                height += 50;
+
+                // Couleur par défaut du texte
+                brush.Color = Color.DarkGray;
             }
         }
 
@@ -149,6 +149,23 @@ namespace SpaceInvaders
                     }
                     break;
 
+                case Game.GameStates.Lost:
+                    if (keyPressed.Contains(Keys.Space))
+                    {
+                        Game.game.ResetGame();
+                        Game.game.State = Game.GameStates.Menu;
+                        keyPressed.Remove(Keys.Space);
+                    }
+                    break;
+
+                case Game.GameStates.Won:
+                    if (keyPressed.Contains(Keys.Space))
+                    {
+                        Game.game.ResetGame();
+                        Game.game.State = Game.GameStates.Menu;
+                        keyPressed.Remove(Keys.Space);
+                    }
+                    break;
 
                 default:
                     Console.WriteLine("DEFAULT");

@@ -28,7 +28,7 @@ namespace SpaceInvaders
             Menu,
             Play,
             Pause,
-            Win,
+            Won,
             Lost,
         }
 
@@ -125,17 +125,11 @@ namespace SpaceInvaders
         {
             this.GameSize = gameSize;
 
-            // Création du menu
+            // Menu creation
             menu = Menu.CreateMenu(this);
 
-            // Création du bloc d'ennemis
-            this.EnemiesBlockCreation();
-
-            // Creation du vaisseau
-            this.PlayerSpaceShipCreation();
-
-            // Création des bunkers
-            this.BunkersCreation();
+            // Game objects creation
+            ResetGame();
         }
 
         #endregion
@@ -202,7 +196,7 @@ namespace SpaceInvaders
             this.TriggerCreation();
         }
 
-        private void ResetGame()
+        public void ResetGame()
         {
             // Suppression tous les objets du jeu
             this.PlayerShip = null;
@@ -217,14 +211,7 @@ namespace SpaceInvaders
 
             // Création des bunkers
             this.BunkersCreation();
-
-            State = GameStates.Play;
-
         }
-
-        #endregion
-
-        #region methods
 
         /// <summary>
         /// Force a given key to be ignored in following updates until the user
@@ -262,7 +249,7 @@ namespace SpaceInvaders
                     break;
 
                 // Won
-                case GameStates.Win:
+                case GameStates.Won:
                     menu.DrawWin(g);
                     break;
 
@@ -290,20 +277,9 @@ namespace SpaceInvaders
         /// </summary>
         public void Update(double deltaT)
         {
-            // add new game objects
+            // add pending game objects
             gameObjects.UnionWith(pendingNewGameObjects);
             pendingNewGameObjects.Clear();
-
-            //// if space is pressed DEBUG SPAWN BALLE QUI TOMBE
-            //if (keyPressed.Contains(Keys.Space))
-            //{
-            //    // create new BalleQuiTombe
-            //    GameObject newObject = new BalleQuiTombe(gameSize.Width / 2, 0);
-            //    // add it to the game
-            //    AddNewGameObject(newObject);
-            //    // release key space (no autofire)
-            //    ReleaseKey(Keys.Space);
-            //}
 
 
             // Taking care of all game cases below
@@ -323,18 +299,20 @@ namespace SpaceInvaders
             } // DEBUG ^^^
 
             //Win if all ships are destroyed
-            if (!Enemies.enemyships.Any() && State != GameStates.Win)
+            if (!Enemies.enemyships.Any() && State != GameStates.Won)
             {
-                State = GameStates.Win;
+                State = GameStates.Won;
             }
             //Lose if ally ship is destroyed
             else if (!PlayerShip.IsAlive() && State != GameStates.Lost)
             {
                 State = GameStates.Lost;
             }
-            else if (keyPressed.Contains(Keys.Space) && ( State == GameStates.Lost || State == GameStates.Win)){
+            // TODO : bouger ça proprement ptdr
+            /*else if (keyPressed.Contains(Keys.Space) && ( State == GameStates.Lost || State == GameStates.Won)){
                 this.ResetGame();
-            }
+                State = GameStates.Play;
+            }*/
             // update each game object if we're playing
             else if (State == GameStates.Play)
             {
