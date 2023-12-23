@@ -55,7 +55,15 @@ namespace SpaceInvaders
 
         #region game technical elements
 
+        /// <summary>
+        ///  Level Counter
+        /// </summary>
         public int WaveCounter = 0;
+
+        /// <summary>
+        ///  High Score
+        /// </summary>
+        public int HighScore = 0;
 
         /// <summary>
         ///  enemy ship block
@@ -95,11 +103,6 @@ namespace SpaceInvaders
         /// Singleton for easy access
         /// </summary>
         public static Menu menu { get; private set; }
-
-        /// <summary>
-        /// Singleton for easy access
-        /// </summary>
-        public int HighScore { get; internal set; }
 
         /// <summary>
         /// A shared black brush
@@ -375,12 +378,21 @@ namespace SpaceInvaders
             if (!Enemies.enemyships.Any() && State != GameStates.Won)
             {
                 menu.StopMusic();
+
+                // HighScore calculation
+                game.PlayerShip.Points += game.PlayerShip.Lives;
+                game.HighScore = Math.Max(game.HighScore, game.PlayerShip.Points);
+
                 State = GameStates.Won;
             }
             //Lose if ally ship is destroyed
             else if (!PlayerShip.IsAlive() && State != GameStates.Lost)
             {
                 menu.StopMusic();
+
+                // HighScore calculation
+                game.HighScore = Math.Max(game.HighScore, game.PlayerShip.Points);
+
                 State = GameStates.Lost;
             }
 

@@ -288,10 +288,13 @@ namespace SpaceInvaders
                 case Game.GameStates.Lost:
                     if (keyPressed.Contains(Keys.Enter))
                     {
+                        // Music stop to prepare for next one
                         StopMusic();
-
+                        
+                        // Reset game and go to next State
                         game.ResetGame();
                         game.State = Game.GameStates.Menu;
+
                         keyPressed.Remove(Keys.Enter);
                     }
                     break;
