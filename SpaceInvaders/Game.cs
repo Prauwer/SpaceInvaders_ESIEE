@@ -360,6 +360,7 @@ namespace SpaceInvaders
                 // decrement missile counter
                 PlayerShip.MissileCounter--;
             }
+            // DEBUG
             else if (keyPressed.Contains(Keys.B))
             {
                 LifeBonus newBonus = new LifeBonus(new Vecteur2D(PlayerShip.Position.x, 0), 100, Side.Bonus);
@@ -367,22 +368,25 @@ namespace SpaceInvaders
                 AddNewGameObject(newBonus);
                 // release key space (no autofire)
                 ReleaseKey(Keys.B);
-            }
+            } // DEBUG
 
             //Win if all ships are destroyed
             if (!Enemies.enemyships.Any() && State != GameStates.Won)
             {
+                menu.StopMusic();
                 State = GameStates.Won;
             }
             //Lose if ally ship is destroyed
             else if (!PlayerShip.IsAlive() && State != GameStates.Lost)
             {
+                menu.StopMusic();
                 State = GameStates.Lost;
             }
 
             // update each game object if we're playing
             if (State == GameStates.Play)
             {
+                menu.PlayGameMusic();
                 foreach (GameObject gameObject in gameObjects)
                 {
                     gameObject.Update(this, deltaT);

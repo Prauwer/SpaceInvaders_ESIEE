@@ -92,6 +92,30 @@ namespace SpaceInvaders
             soundPlayer.PlayLooping();
         }
 
+        public void PlayLostMusic()
+        {
+            if (soundPlayer != null)
+            {
+                return;
+            }
+
+            soundPlayer = new SoundPlayer();
+            soundPlayer.Stream = Properties.Resources.lost_music;
+            soundPlayer.Play();
+        }
+
+        public void PlayWonMusic()
+        {
+            if (soundPlayer != null)
+            {
+                return;
+            }
+
+            soundPlayer = new SoundPlayer();
+            soundPlayer.Stream = Properties.Resources.won_music;
+            soundPlayer.Play();
+        }
+
         public void StopMusic()
         {
             // Stop the background music if it's playing and kill the soundPlayer
@@ -110,12 +134,16 @@ namespace SpaceInvaders
 
         internal void DrawLost(Graphics g)
         {
+            PlayLostMusic();
+
             font = new Font(privateFontCollection.Families[0], 16);
             g.DrawString($"YOU LOSE!\n(press <ENTER> to go to the Main Menu)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 260, game.GameSize.Height / 2 - 24);
         }
 
         internal void DrawWon(Graphics g)
         {
+            PlayWonMusic();
+
             font = new Font(privateFontCollection.Families[0], 16);
             g.DrawString($"YOU WIN!\n(press <ENTER> to go to the Main Menu)\n{game.PlayerShip.Points} Points", font, brush, game.GameSize.Width / 2 - 260, game.GameSize.Height / 2 - 24);
         }
@@ -184,7 +212,6 @@ namespace SpaceInvaders
                         if (selectedItem == menuItems[0])
                         {
                             StopMusic();
-                            PlayGameMusic();
                             game.State = Game.GameStates.Play;
                         }
                         else if (selectedItem == menuItems[1])
