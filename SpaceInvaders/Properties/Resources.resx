@@ -181,9 +181,6 @@
   <data name="shoot4" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\shoot4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="shoot_sound" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\shoot_sound.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="space_invaders_font" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\space_invaders_font.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
