@@ -51,10 +51,10 @@ namespace SpaceInvaders
         /// </summary>
         /// <param name="p">projectile in collision with the spaceship</param>
         /// <param name="numberOfPixelsInCollision">number of pixels in collision with the spaceship</param>
-        protected override void OnCollision(Projectile m, int numberOfPixelsInCollision)
+        protected override void OnCollision(Projectile p, int numberOfPixelsInCollision)
         {
-            int damage = Math.Min(m.Lives, this.Lives);
-            m.Lives -= damage;
+            int damage = Math.Min(p.Lives, this.Lives);
+            p.Lives -= damage;
             this.Lives -= damage;
         }
     }

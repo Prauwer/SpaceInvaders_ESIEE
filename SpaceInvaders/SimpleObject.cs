@@ -45,7 +45,7 @@ namespace SpaceInvaders
         /// <summary>
         /// Play sound on ship getting hit
         /// </summary>
-        public void playHit() 
+        public void PlayHit() 
         {
             SoundPlayer soundPlayer = new SoundPlayer();
             soundPlayer.Stream = Properties.Resources.shoot_sound;
@@ -110,7 +110,7 @@ namespace SpaceInvaders
                             }
                             else
                             {
-                                playHit();
+                                PlayHit();
                             }
 
                             numberOfPixelsInCollision++;
