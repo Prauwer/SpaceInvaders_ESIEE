@@ -42,16 +42,6 @@ namespace SpaceInvaders
             return Lives > 0;
         }
 
-        /// <summary>
-        /// Play sound on ship getting hit
-        /// </summary>
-        public void PlayHit() 
-        {
-            SoundPlayer soundPlayer = new SoundPlayer();
-            soundPlayer.Stream = Properties.Resources.shoot_sound;
-            soundPlayer.Play();
-        }
-
         public bool CollisionRectangle(Projectile p)
         {
             if (p.Position.x <= this.Position.x + this.Image.Width // Le missile est en collision gauche de l'objet
@@ -107,10 +97,6 @@ namespace SpaceInvaders
                             {
                                 Color newColor = Color.FromArgb(0, 0, 0, 0);
                                 Image.SetPixel((int)xBunker, (int)yBunker, newColor);
-                            }
-                            else
-                            {
-                                PlayHit();
                             }
 
                             numberOfPixelsInCollision++;

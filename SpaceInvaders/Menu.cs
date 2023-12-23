@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Linq;
+using System.Media;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -31,6 +33,7 @@ namespace SpaceInvaders
 
         string selectedItem;
 
+        SoundPlayer soundPlayer;
 
         SolidBrush brush = new SolidBrush(Color.White);
         PrivateFontCollection privateFontCollection = new PrivateFontCollection();
@@ -65,6 +68,41 @@ namespace SpaceInvaders
             font = new Font(privateFontCollection.Families[0], 22);
         }
 
+        public void PlayMenuMusic()
+        {
+            if (soundPlayer != null)
+            {
+                return;
+            }
+
+            soundPlayer = new SoundPlayer();
+            soundPlayer.Stream = Properties.Resources.menu_music;
+            soundPlayer.PlayLooping();
+        }
+
+        public void PlayGameMusic()
+        {
+            if (soundPlayer != null)
+            {
+                return;
+            }
+
+            soundPlayer = new SoundPlayer();
+            soundPlayer.Stream = Properties.Resources.game_music;
+            soundPlayer.PlayLooping();
+        }
+
+        public void StopMusic()
+        {
+            // Stop the background music if it's playing and kill the soundPlayer
+            if (soundPlayer != null)
+            {
+                soundPlayer.Stop();
+            }
+
+            soundPlayer = null;
+        }
+
         internal void DrawPause(Graphics g)
         {
             g.DrawString("PAUSE", font, brush, game.GameSize.Width / 2 - 40, game.GameSize.Height / 2 - 24);
@@ -94,6 +132,8 @@ namespace SpaceInvaders
 
         internal void DrawMainMenu(Graphics g)
         {
+            // Musique
+            PlayMenuMusic();
 
             // Affichage du logo
             Image BackgroundImage = Properties.Resources.logo;
@@ -143,6 +183,8 @@ namespace SpaceInvaders
                     {
                         if (selectedItem == menuItems[0])
                         {
+                            StopMusic();
+                            PlayGameMusic();
                             game.State = Game.GameStates.Play;
                         }
                         else if (selectedItem == menuItems[1])
