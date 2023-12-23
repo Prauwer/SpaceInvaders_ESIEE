@@ -264,6 +264,8 @@ namespace SpaceInvaders
                 case Game.GameStates.Lost:
                     if (keyPressed.Contains(Keys.Enter))
                     {
+                        StopMusic();
+
                         game.ResetGame();
                         game.State = Game.GameStates.Menu;
                         keyPressed.Remove(Keys.Enter);
@@ -273,15 +275,20 @@ namespace SpaceInvaders
                 case Game.GameStates.Won:
                     if (keyPressed.Contains(Keys.Enter))
                     {
+                        StopMusic();
+
                         game.ResetGame();
                         game.State = Game.GameStates.Menu;
                         keyPressed.Remove(Keys.Enter);
                     }
                     else if (keyPressed.Contains(Keys.Space)) {
+                        StopMusic();
+
                         game.ResetGame();
                         game.State = Game.GameStates.Play;
                         keyPressed.Remove(Keys.Space);
                     }
+
                     break;
 
                 default:
