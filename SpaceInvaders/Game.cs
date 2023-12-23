@@ -364,15 +364,6 @@ namespace SpaceInvaders
                 // decrement missile counter
                 PlayerShip.MissileCounter--;
             }
-            // DEBUG
-            else if (keyPressed.Contains(Keys.B))
-            {
-                LifeBonus newBonus = new LifeBonus(new Vecteur2D(PlayerShip.Position.x, 0), 100, Side.Bonus);
-                // add it to the game
-                AddNewGameObject(newBonus);
-                // release key space (no autofire)
-                ReleaseKey(Keys.B);
-            } // DEBUG
 
             //Win if all ships are destroyed
             if (!Enemies.enemyships.Any() && State != GameStates.Won)
