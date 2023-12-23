@@ -164,16 +164,30 @@ namespace SpaceInvaders
         }
         internal void DrawControls(Graphics g)
         {
-            string text = "Use <LEFT> and <RIGHT> arrows to move your ship :           \0\n" +
+            string text = "Use <LEFT> and <RIGHT> arrows to move your ship :          \0\n" +
                 "Use <UP> arrow to shoot enemy ships\n" +
+                "Bonuses :       \0 drop from enemy ships\nCollect them by shooting or touching\n" +
                 "Use <DOWN> arrow to drop a missile coming from the sky if you have one :           \0\n" +
                 "\n(press <ENTER> to go to the Main Menu)";
 
 
             g.DrawString(text, font, brush, drawingArea, stringFormat);
 
-            g.DrawImage(Properties.Resources.ship3, game.GameSize.Width / 2 + 50, game.GameSize.Height / 2 - 75, 25, 25);
-            g.DrawImage(Properties.Resources.shoot2, game.GameSize.Width / 2 + 170, game.GameSize.Height / 2 + 10, 25, 40);
+            g.DrawImage(Properties.Resources.ship3, game.GameSize.Width / 2 + 50, game.GameSize.Height / 2 - 105, 25, 25);
+            g.DrawImage(Properties.Resources.bonus, game.GameSize.Width / 2 - 105, game.GameSize.Height / 2 - 45, 25, 25);
+            g.DrawImage(Properties.Resources.shoot2, game.GameSize.Width / 2 + 170, game.GameSize.Height / 2 + 40, 25, 40);
+
+            Rectangle rectangle = new Rectangle (game.GameSize.Width / 2 + 49, game.GameSize.Height / 2 - 106, 26, 26);
+            g.DrawRectangle(new Pen(Color.Gold, 2), rectangle);
+
+            rectangle = new Rectangle(game.GameSize.Width / 2 - 106, game.GameSize.Height / 2 - 46, 26, 26);
+            g.DrawRectangle(new Pen(Color.Gold, 2), rectangle);
+
+            rectangle = new Rectangle(game.GameSize.Width / 2 + 169, game.GameSize.Height / 2 + 39, 26, 41);
+            g.DrawRectangle(new Pen(Color.Gold, 2), rectangle);
+
+
+
         }
 
         internal void DrawHighScore(Graphics g)
