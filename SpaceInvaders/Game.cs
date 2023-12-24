@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Drawing;
-using System.Diagnostics;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
-using System.Drawing.Text;
-using System.Runtime.InteropServices;
 using SpaceInvaders.Properties;
 
 namespace SpaceInvaders
