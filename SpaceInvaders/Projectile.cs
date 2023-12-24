@@ -5,11 +5,16 @@ namespace SpaceInvaders
 {
     abstract class Projectile : SimpleObject
     {
-        //Attributs
-       
         public double Speed { get; private set; }
 
-        //Constructeur
+        /// <summary>
+        /// Public constructor for a projectile
+        /// </summary>
+        /// <param name="position">Position of the projectile</param>
+        /// <param name="speed">Speed of the projectile</param>
+        /// <param name="lives">lives of the projectile</param>
+        /// <param name="image">Image of the projectile</param>
+        /// <param name="side">Side of the projectile</param>
         public Projectile(Vecteur2D position, double speed, int lives, Bitmap image, Side side): base(side)
         {
             Position = position;
@@ -18,8 +23,6 @@ namespace SpaceInvaders
             Image = image;
         }
 
-        //Méthodes
-
         /// <summary>
         /// Update the state of the Projecile
         /// </summary>
@@ -27,10 +30,10 @@ namespace SpaceInvaders
         /// <param name="deltaT">time ellapsed in seconds since last call to Update</param>
         public override void Update(Game gameInstance, double deltaT)
         {
-            // Déplacement du missile
+            // Projectile movements
             Position.y += Speed * deltaT;
 
-            // Tuer si le missile sort du cadre de jeu
+            // Kill the projectile if it goes outside game limits
             if(Position.y < 0 - Image.Height || Position.y > gameInstance.GameSize.Width)
             {
                 Lives = 0;
@@ -38,12 +41,11 @@ namespace SpaceInvaders
         }
 
         /// <summary>
-        /// Render the Player Spaceship
+        /// Constructor for a new random bonus
         /// </summary>
         /// <param name="rand">random object (we put it in params to avoid that every random have the same value)</param>
         /// <param name="posX">Position X where we want to create the bonus</param>
         /// <param name="posY">Position Y where we want to create the bonus</param>
-
         public static Projectile RandomCreation(Random rand, double posX, double posY)
         {
             if (rand.NextDouble() < 0.15)

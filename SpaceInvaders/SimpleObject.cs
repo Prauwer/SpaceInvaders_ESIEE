@@ -2,20 +2,32 @@
 
 namespace SpaceInvaders
 {
+    /// <summary>
+    /// This is the generic abstact base class for any interactable entity of the game
+    /// </summary>
     abstract class SimpleObject : GameObject
     {
-        protected SimpleObject(Side Side) : base(Side)
-        {
-
-        }
-
         public Vecteur2D Position { get; protected set; }
 
         public int Lives = 1;
 
         public Bitmap Image { get; protected set; }
 
-        protected abstract void OnCollision(Projectile m, int numberOfPixelsInCollision);
+        /// <summary>
+        /// Public constructor for a SimpleObject
+        /// </summary>
+        /// <param name="Side">Side of the object</param>
+        protected SimpleObject(Side Side) : base(Side)
+        {
+
+        }
+
+        /// <summary>
+        /// Behavior to expect when a collision occurs
+        /// </summary>
+        /// <param name="p">Projectile to interact with</param>
+        /// <param name="numberOfPixelsInCollision">numbers of pixels in collision</param>
+        protected abstract void OnCollision(Projectile p, int numberOfPixelsInCollision);
 
         /// <summary>
         /// Render the simple object
@@ -36,12 +48,17 @@ namespace SpaceInvaders
             return Lives > 0;
         }
 
+        /// <summary>
+        /// Determines if a projectile entered the entity perimeter
+        /// </summary>
+        /// <param name="p">the projectile to check</param>
+        /// <returns>Bool : Is projectile inside of the entity perimeter ?</returns>
         public bool CollisionRectangle(Projectile p)
         {
-            if (p.Position.x <= this.Position.x + this.Image.Width // Le missile est en collision gauche de l'objet
-             && p.Position.x + p.Image.Width >= this.Position.x    // Le missile est en collision droite de l'objet
-             && p.Position.y + p.Image.Height >= this.Position.y   // Le missile est en collision haut de l'objet
-             && p.Position.y <= this.Position.y + this.Image.Height)  // Le missile est en collision bas de l'objet
+            if (p.Position.x <= this.Position.x + this.Image.Width    // Projectile is in collision left to the object
+             && p.Position.x + p.Image.Width >= this.Position.x       // Projectile is in collision right to the object
+             && p.Position.y + p.Image.Height >= this.Position.y      // Projectile is in collision up to the object
+             && p.Position.y <= this.Position.y + this.Image.Height)  // Projectile is in collision down to the object) 
             {
                 return true;
             }
@@ -52,10 +69,9 @@ namespace SpaceInvaders
         }
 
         /// <summary>
-        /// Determines an projectile is in collision of the game object
+        /// Determines if a projectile is in collision with the game object
         /// </summary>
-        /// <oaram name="p">projectile to check</oaram>
-        /// <returns>Am I alive ?</returns>
+        /// <param name="p">projectile to check</param>
         public override void Collision(Projectile p)
         {
             if (CollisionRectangle(p) && (this.Side!=p.Side && (p.Side != Side.Bonus || (this.Side == Side.Ally && p.Side == Side.Bonus))))

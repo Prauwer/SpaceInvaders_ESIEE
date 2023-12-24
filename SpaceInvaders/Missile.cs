@@ -5,12 +5,17 @@ namespace SpaceInvaders
     internal class Missile : Projectile
     {
 
-        //Constructeur
+        /// <summary>
+        /// Public constructor for a missile
+        /// </summary>
+        /// <param name="position">Position of the missile</param>
+        /// <param name="speed">Speed of the missile</param>
+        /// <param name="lives">lives of the missile</param>
+        /// <param name="image">Image of the missile</param>
+        /// <param name="side">Side of the missile</param>
         public Missile(Vecteur2D position, double speed, int lives, Bitmap image, Side side) : base(position, speed, lives, image, side)
         {
         }
-
-        //Méthodes
 
         /// <summary>
         /// Update the state of the Missile
@@ -20,7 +25,7 @@ namespace SpaceInvaders
         public override void Update(Game gameInstance, double deltaT)
         {
             base.Update(gameInstance, deltaT);
-            // Test collision avec les objets du jeu
+            // Collision test with game objects
             foreach (GameObject gameObject in gameInstance.gameObjects)
             {
                 if (gameObject != this)
@@ -31,7 +36,7 @@ namespace SpaceInvaders
         }
 
         /// <summary>
-        /// handle the case of the missile is hitted
+        /// handle the case of the missile is hit
         /// </summary>
         /// <param name="p">projectile in collision with the missile</param>
         /// <param name="numberOfPixelsInCollision">number of pixels in collision with the missile</param>

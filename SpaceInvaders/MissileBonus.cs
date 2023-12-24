@@ -2,6 +2,12 @@
 {
     internal class MissileBonus : Projectile
     {
+        /// <summary>
+        /// Public constructor for a missile bonus
+        /// </summary>
+        /// <param name="position">Position of the bonus</param>
+        /// <param name="speed">Speed of the bonus</param>
+        /// <param name="side">Side of the bonus</param>
         public MissileBonus(Vecteur2D position, double speed, Side side) : base(position, speed, 1, Properties.Resources.bonus2, side)
         {
         }
@@ -14,7 +20,7 @@
         public override void Update(Game gameInstance, double deltaT)
         {
             base.Update(gameInstance, deltaT);
-            // Test collision avec les objets du jeu
+            // Collision test with game objects
             foreach (GameObject gameObject in gameInstance.gameObjects)
             {
                 if (gameObject.GetType() == typeof(PlayerSpaceship))
@@ -25,7 +31,7 @@
         }
 
         /// <summary>
-        /// handle the case of the missile bonus is hitted
+        /// handle the case of the missile bonus is hit
         /// </summary>
         /// <param name="p">projectile in collision with the missile bonus</param>
         /// <param name="numberOfPixelsInCollision">number of pixels in collision with the missile bonus</param>
@@ -33,10 +39,10 @@
         {
             if (p.Side == Side.Ally)
             {
+                Game.game.PlayerShip.handleBonus(this);
+
                 p.Lives = 0;
                 this.Lives = 0;
-
-                Game.game.PlayerShip.handleBonus(this);
             }
         }
     }

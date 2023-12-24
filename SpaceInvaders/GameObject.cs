@@ -2,7 +2,9 @@
 
 namespace SpaceInvaders
 {
-
+    /// <summary>
+    /// Enum of all the sides a gameobject can belong to
+    /// </summary>
     public enum Side
     {
         Ally,
@@ -19,12 +21,19 @@ namespace SpaceInvaders
         public int InitialLives;
 
         public Side Side { get; private set; }
-        
+
+        /// <summary>
+        /// Public constructor for a GameObject
+        /// </summary>
+        /// <param name="Side">Side of the object</param>
         public GameObject(Side Side)
         {
             this.Side = Side;
         }
 
+        /// <summary>
+        /// Public constructor for a GameObject
+        /// </summary>
         public GameObject()
         {
             Side = Side.Neutral;
@@ -53,8 +62,7 @@ namespace SpaceInvaders
         /// <summary>
         /// Determines an projectile is in collision of the game object
         /// </summary>
-        /// <oaram name="p">projectile to check</oaram>
-        /// <returns>Am I alive ?</returns>
+        /// <param name="p">projectile to check</param>
         public abstract void Collision(Projectile p);
     }
 }

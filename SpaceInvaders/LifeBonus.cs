@@ -2,6 +2,12 @@
 {
     internal class LifeBonus : Projectile
     {
+        /// <summary>
+        /// Public constructor for a life bonus
+        /// </summary>
+        /// <param name="position">Position of the bonus</param>
+        /// <param name="speed">Speed of the bonus</param>
+        /// <param name="side">Side of the bonus</param>
         public LifeBonus(Vecteur2D position, double speed, Side side) : base(position, speed, 1, Properties.Resources.bonus, side)
         {
         }
@@ -14,7 +20,7 @@
         public override void Update(Game gameInstance, double deltaT)
         {
             base.Update(gameInstance, deltaT);
-            // Test collision avec les objets du jeu
+            // Collision test with game objects
             foreach (GameObject gameObject in gameInstance.gameObjects)
             {
                 if (gameObject.GetType() == typeof(PlayerSpaceship))
@@ -25,7 +31,7 @@
         }
 
         /// <summary>
-        /// handle the case of the life bonus is hitted
+        /// handle the case of the life bonus is hit
         /// </summary>
         /// <param name="p">projectile in collision with the bonus</param>
         /// <param name="numberOfPixelsInCollision">number of pixels in collision with the bonus</param>

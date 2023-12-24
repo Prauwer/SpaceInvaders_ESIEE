@@ -19,6 +19,9 @@ namespace SpaceInvaders
         /// </summary>
         public HashSet<GameObject> gameObjects = new HashSet<GameObject>();
 
+        /// <summary>
+        /// Enum of all the states the game can have
+        /// </summary>
         public enum GameStates
         {
             Menu,
@@ -116,8 +119,6 @@ namespace SpaceInvaders
         /// Singleton constructor
         /// </summary>
         /// <param name="gameSize">Size of the game area</param>
-        /// 
-        /// <returns></returns>
         public static Game CreateGame(Size gameSize)
         {
             if (game == null)
@@ -139,13 +140,13 @@ namespace SpaceInvaders
             // Game objects creation
             this.GameSize = gameSize;
 
-            // Création du bloc d'ennemis
+            // Enemy block creation
             this.EnemiesBlockCreation();
 
-            // Creation du vaisseau
+            // Player Spaceship creation
             this.PlayerSpaceShipCreation();
 
-            // Création des bunkers
+            // Bunkers creation
             this.BunkersCreation();
         }
 
@@ -154,9 +155,9 @@ namespace SpaceInvaders
         #region methods
 
 
-        // <summary>
-        // EnemiesBlock creation
-        // </summary>
+        /// <summary>
+        /// Creates the enemy block
+        /// </summary>
         private void EnemiesBlockCreation()
         {
             int enemyBlockOffsetX = 80;
@@ -188,18 +189,18 @@ namespace SpaceInvaders
             }
         }
 
-        // <summary>
-        // Bunker Trigger creation
-        // </summary>
+        /// <summary>
+        /// Creates the bunker trigger
+        /// </summary>
         private void TriggerCreation()
         {
             trigger = new Trigger(new Vecteur2D(0, GameSize.Height - 220), new Size(605, 10));
             AddNewGameObject(this.trigger);
         }
 
-        // <summary>
-        // Player Space Ship creation
-        // </summary>
+        /// <summary>
+        /// Creates the player spaceship
+        /// </summary>
         private void PlayerSpaceShipCreation()
         {
             this.PlayerShip = new PlayerSpaceship(new Vecteur2D(0, 0), 150);
@@ -208,9 +209,9 @@ namespace SpaceInvaders
             AddNewGameObject(this.PlayerShip);
         }
 
-        // <summary>
-        // Bunkers creation
-        // </summary>
+        /// <summary>
+        /// Creates the bunkers
+        /// </summary>
         private void BunkersCreation()
         {
             for (int i = 0; i < 3; i++)
@@ -221,13 +222,16 @@ namespace SpaceInvaders
                 AddNewGameObject(bunker);
             }
           
-            // Création du trigger pour les bunkers
+            // Trigger creation for the bunkers
             this.TriggerCreation();
         }
 
+        /// <summary>
+        /// Resets all game elements and increases difficulty if a wave was won, else resets the score
+        /// </summary>
         public void ResetGame()
         {
-            // Suppression tous les objets du jeu
+            // Deleting all game objects
             this.Enemies = null;
             this.gameObjects.Clear();
             this.gameObjects.Add(this.PlayerShip);
@@ -242,16 +246,16 @@ namespace SpaceInvaders
             }
             else
             {
-                // Incrémentation du compteur de vagues
+                // Incrementing wave counter
                 WaveCounter++;
                 PlayerShip.Lives += Math.Min(50, PlayerShip.InitialLives - PlayerShip.Lives);
             }
             
 
-            // Création du bloc d'ennemis
+            // Enemy block creation
             this.EnemiesBlockCreation();
 
-            // Création des bunkers
+            // Bunkers creation
             this.BunkersCreation();
         }
 
@@ -265,19 +269,18 @@ namespace SpaceInvaders
             keyPressed.Remove(key);
         }
 
-
         /// <summary>
         /// Draw the whole game
         /// </summary>
         /// <param name="g">Graphics to draw in</param>
         public void Draw(Graphics g)
         {
-
             // Background drawing
             Image BackgroundImage = Properties.Resources.background;
             Rectangle rectangle = new Rectangle(0, 0, game.GameSize.Width, game.GameSize.Height);
             g.DrawImage(BackgroundImage, rectangle);
 
+            // Super missiles counter drawing
             int missileWidth = 10;
             for (int i = 0; i<PlayerShip.MissileCounter; i++)
             {
@@ -287,7 +290,7 @@ namespace SpaceInvaders
 
             }
 
-            // Different drawing depending of game.State
+            // Different menu drawing depending of game.State
             switch (State)
             {
                 // Pause
@@ -322,13 +325,13 @@ namespace SpaceInvaders
                     menu.DrawControls(g);
                     break;
 
+                // High score
                 case GameStates.HighScore:
                     menu.DrawHighScore(g);
                     break;
 
                 // Default
                 default:
-                    Console.WriteLine("You shouldn't be there.");
                     break;
             }
         }
@@ -345,7 +348,7 @@ namespace SpaceInvaders
             // Taking care of all game cases below
 
             //Update Menu -> takes care of all the menu tasks
-            menu.UpdateMenu(deltaT, keyPressed);
+            menu.UpdateMenu(keyPressed);
 
             // spawn super missile if the player have missile in stock
             if (keyPressed.Contains(Keys.Down) && PlayerShip.MissileCounter > 0)
@@ -363,36 +366,43 @@ namespace SpaceInvaders
             //Win if all ships are destroyed
             if (!Enemies.enemyships.Any() && State != GameStates.Won)
             {
+                // Music stop to prepare for next one
                 menu.StopMusic();
 
                 // HighScore calculation
                 game.PlayerShip.Points += game.PlayerShip.Lives;
                 game.HighScore = Math.Max(game.HighScore, game.PlayerShip.Points);
 
+                // Go to Won State
                 State = GameStates.Won;
             }
             //Lose if ally ship is destroyed
             else if (!PlayerShip.IsAlive() && State != GameStates.Lost)
             {
+                // Music stop to prepare for next one
                 menu.StopMusic();
 
                 // HighScore calculation
                 game.HighScore = Math.Max(game.HighScore, game.PlayerShip.Points);
 
+                // Go to Lost State
                 State = GameStates.Lost;
             }
 
-            // update each game object if we're playing
+            // Actions to do if we're playing the game
             if (State == GameStates.Play)
             {
+                // Play the Game Music
                 menu.PlayGameMusic();
+
+                // Update each game object
                 foreach (GameObject gameObject in gameObjects)
                 {
                     gameObject.Update(this, deltaT);
                 }
             }
 
-            // remove dead objects
+            // Remove dead objects. Random is used to roll a bonus when an enemy dies
             Random rand = new Random();
             gameObjects.RemoveWhere(gameObject => {
                 if (!gameObject.IsAlive())

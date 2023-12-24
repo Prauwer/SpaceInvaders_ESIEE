@@ -10,6 +10,11 @@ namespace SpaceInvaders
         public Image Image { get; protected set; }
         public bool isTriggered { get; protected set; }
 
+        /// <summary>
+        /// Public constructor for the trigger
+        /// </summary>
+        /// <param name="position">Position of the trigger</param>
+        /// <param name="size">Size of the trigger</param>
         public Trigger(Vecteur2D position, Size size)
         {
             Position = position;
@@ -18,6 +23,10 @@ namespace SpaceInvaders
             isTriggered = false;
         }
 
+        /// <summary>
+        /// Determines an projectile is in collision with the trigger
+        /// </summary>
+        /// <param name="p">projectile to check</param>
         public override void Collision(Projectile p)
         {
             

@@ -7,6 +7,13 @@ namespace SpaceInvaders
     {
         public Projectile Missile;
 
+        /// <summary>
+        /// Public constructor for a SpaceShip
+        /// </summary>
+        /// <param name="position">Position of the spaceship</param>
+        /// <param name="lives">lives of the spaceship</param>
+        /// <param name="image">Image of the spaceship</param>
+        /// <param name="side">Side of the spaceship</param>
         public SpaceShip(Vecteur2D position, int lives, Bitmap image, Side side): base(side)
         {
             Position = position;
@@ -15,6 +22,11 @@ namespace SpaceInvaders
             InitialLives = lives;
         }
 
+        /// <summary>
+        /// Update the state of a spaceship
+        /// </summary>
+        /// <param name="gameInstance">instance of the current game</param>
+        /// <param name="deltaT">time ellapsed in seconds since last call to Update</param>
         public override void Update(Game gameInstance, double deltaT)
         {
 
@@ -40,7 +52,7 @@ namespace SpaceInvaders
         }
 
         /// <summary>
-        /// handle the case of the spaceship is hitted
+        /// handle the case of the spaceship is hit
         /// </summary>
         /// <param name="p">projectile in collision with the spaceship</param>
         /// <param name="numberOfPixelsInCollision">number of pixels in collision with the spaceship</param>

@@ -20,6 +20,11 @@ namespace SpaceInvaders
         public Vecteur2D Position;
         public Size size;
 
+        /// <summary>
+        /// Public constructor for the enemy block
+        /// </summary>
+        /// <param name="position">Position of the block</param>
+        /// <param name="width">Width of the block</param>
 
         public EnemyBlock(Vecteur2D position, int width): base(Side.Enemy)
         {
@@ -32,7 +37,13 @@ namespace SpaceInvaders
             size.Width = baseWidth;
             size.Height = 0;
         }
-            
+
+        /// <summary>
+        /// Adds a line of spaceships to the enemy block
+        /// </summary>
+        /// <param name="nbShips">number of ships to add</param>
+        /// <param name="nbLives">amount of life for these ships</param
+        /// <param name="shipImage">image for the line of ships</param>
         public void AddLine(int nbShips, int nbLives, Bitmap shipImage)
         {
             for(int i = 0; i<nbShips; i++)
@@ -52,7 +63,10 @@ namespace SpaceInvaders
             size.Height += shipImage.Height;
         }
 
-        void UpdateSize() // Dessine la boite autour de tous les vaisseaux
+        /// <summary>
+        /// Constantly updates the size of the spaceship block
+        /// </summary>
+        void UpdateSize()
         {
             if (enemyships.Count > 0)
             {
@@ -64,35 +78,53 @@ namespace SpaceInvaders
             }
         }
 
+        /// <summary>
+        /// Does nothing, the enemy block entity is invisible (the ships are visible). Can be used for 
+        /// </summary>
+        /// <param name="gameInstance">Instance of the game</param>
+        /// <param name="graphics">Graphics to draw in</param>
         public override void Draw(Game gameInstance, Graphics graphics)
         {
         }
 
+        /// <summary>
+        /// Determines if object is alive. If false, the object will be removed automatically.
+        /// </summary>
+        /// <returns>Am I alive ?</returns>
         public override bool IsAlive()
         {
             return (enemyships.Count != 0);
         }
 
+        /// <summary>
+        /// Automatically moves the block down if it touches the edge
+        /// </summary>
+        /// <param name="gameSizeWidth">Width of the game instance</param>
         public void MoveBlockDown(int gameSizeWidth)
         {
-            speed *= Math.Round(speedMultiplier, 2); // Augmenter la vitesse de déplacement
-            Position.y += 20;                        // Baisser d'un bloc
+            speed *= Math.Round(speedMultiplier, 2); // Increase move speed
+            Position.y += 20;                        // Bring 20 pixels down
             foreach (SpaceShip ship in enemyships)
             {
                 ship.Position.y += 20;
-                if (direction == -1)                 // Placer le bloc à gauche
+                if (direction == -1)                 // Place the block on the left
                 {
                     ship.Position.x -= Position.x;
                 }
-                else                                 // OU Placer le bloc à droite
+                else                                 // OR place the block on the right
                 {
                     ship.Position.x -= Position.x + size.Width - gameSizeWidth;
                 }
             }
-            direction *= -1;                         // Inverser la direction
-            randomShootProbability *= 2;
+            direction *= -1;                         // Reverse speed
+            randomShootProbability *= 2;             // Increase random shoot probability
         }
 
+        /// <summary>
+        /// Update the state of a game objet
+        /// </summary>
+        /// <param name="gameInstance">instance of the current game</param>
+        /// <param name="deltaT">time ellapsed in seconds since last call to Update</param>
         public override void Update(Game gameInstance, double deltaT)
         {
             // Update enemy box size
@@ -101,35 +133,41 @@ namespace SpaceInvaders
                 
             Random rand = new Random();
 
-            // Déplacement latéral
+            // Block lateral movement
             Position.x += speed * deltaT * direction;
+
             foreach (SpaceShip ship in enemyships){
-                // Déplacement latéral
+                // Ships lateral movement
                 ship.Position.x += speed * deltaT * direction;
 
-                // Tir des enemis
+                // Enemy ships shoot
                 double r = rand.NextDouble();
                 if (r <= randomShootProbability * deltaT)
                 {
-                    // Le 1 correspond à la direction vers le bas
+                    // 1 corresponds to direction "DOWN"
                     ship.Shoot(gameInstance, 1, Side.Enemy);
                 }
             }
 
-            // Le block a atteint un bord
+            // Block has reached an edge
             if (Position.x < 0 || (Position.x + size.Width) > gameInstance.GameSize.Width)
             {
                 MoveBlockDown(gameInstance.GameSize.Width);
             }
         }
 
-        public bool CollisionRectangle(Projectile m)
+        /// <summary>
+        /// Determines if a projectile entered the entity perimeter
+        /// </summary>
+        /// <param name="p">the projectile to check</param>
+        /// <returns>Bool : Is projectile inside of the block ?</returns>
+        public bool CollisionRectangle(Projectile p)
         {
-            if (m.Position.x <= this.Position.x + this.size.Width   // Le missile est en collision gauche de l'objet
-             && m.Position.x + m.Image.Width >= this.Position.x     // Le missile est en collision droite de l'objet
-             && m.Position.y + m.Image.Height >= this.Position.y    // Le missile est en collision haut de l'objet
-             && m.Position.y <= this.Position.y + this.size.Height  // Le missile est en collision bas de l'objet
-             && m.Side != this.Side)                                // Le missile n'est pas dans le même camps que le vaisseau
+            if (p.Position.x <= this.Position.x + this.size.Width   // Projectile is in collision left to the object
+             && p.Position.x + p.Image.Width >= this.Position.x     // Projectile is in collision right to the object
+             && p.Position.y + p.Image.Height >= this.Position.y    // Projectile is in collision up to the object
+             && p.Position.y <= this.Position.y + this.size.Height  // Projectile is in collision down to the object
+             && p.Side != this.Side)                                // Projectile isn't in the same Side of the object
             {
                 return true;
             }
@@ -138,16 +176,20 @@ namespace SpaceInvaders
                 return false;
             }
         }
-        public override void Collision(Projectile m)
+
+        /// <summary>
+        /// Determines if a projectile is in collision with any of the enemy ships
+        /// </summary>
+        /// <param name="p">projectile to check</param>
+        public override void Collision(Projectile p)
         {
-            if (CollisionRectangle(m))
+            if (CollisionRectangle(p))
             {
                 foreach (SpaceShip ship in enemyships)
                 {
-                    ship.Collision(m);
+                    ship.Collision(p);
                 }
             }
-
         }
     }
 }

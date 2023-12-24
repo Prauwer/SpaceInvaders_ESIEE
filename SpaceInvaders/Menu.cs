@@ -46,8 +46,6 @@ namespace SpaceInvaders
         /// Singleton constructor
         /// </summary>
         /// <param name="game">game instance to take care of</param>
-        /// 
-        /// <returns></returns>
         public static Menu CreateMenu(Game game)
         {
             if (menu == null)
@@ -76,6 +74,9 @@ namespace SpaceInvaders
             stringFormat.LineAlignment = StringAlignment.Center;
         }
 
+        /// <summary>
+        /// Plays the Main Menu Music if music isn't already playing
+        /// </summary>
         public void PlayMenuMusic()
         {
             if (soundPlayer != null)
@@ -88,6 +89,9 @@ namespace SpaceInvaders
             soundPlayer.PlayLooping();
         }
 
+        /// <summary>
+        /// Plays the Game Music if music isn't already playing
+        /// </summary>
         public void PlayGameMusic()
         {
             if (soundPlayer != null)
@@ -100,6 +104,9 @@ namespace SpaceInvaders
             soundPlayer.PlayLooping();
         }
 
+        /// <summary>
+        /// Plays the Lost Menu music if music isn't already playing
+        /// </summary>
         public void PlayLostMusic()
         {
             if (soundPlayer != null)
@@ -112,6 +119,9 @@ namespace SpaceInvaders
             soundPlayer.Play();
         }
 
+        /// <summary>
+        /// Plays the Won Menu music if music isn't already playing
+        /// </summary>
         public void PlayWonMusic()
         {
             if (soundPlayer != null)
@@ -124,6 +134,9 @@ namespace SpaceInvaders
             soundPlayer.Play();
         }
 
+        /// <summary>
+        /// Stops the current music if music is currently playing
+        /// </summary>
         public void StopMusic()
         {
             // Stop the background music if it's playing and kill the soundPlayer
@@ -135,11 +148,19 @@ namespace SpaceInvaders
             soundPlayer = null;
         }
 
+        /// <summary>
+        /// Draws the Pause Menu
+        /// </summary>
+        /// <param name="g">Graphics instance</param>
         internal void DrawPause(Graphics g)
         {
             g.DrawString("PAUSE", font, brush, game.GameSize.Width / 2 - 40, game.GameSize.Height / 2 - 24);
         }
 
+        /// <summary>
+        /// Draws the Lost Menu
+        /// </summary>
+        /// <param name="g">Graphics instance</param>
         internal void DrawLost(Graphics g)
         {
             PlayLostMusic();
@@ -149,6 +170,10 @@ namespace SpaceInvaders
             g.DrawString(text, font, brush, drawingArea, stringFormat);
         }
 
+        /// <summary>
+        /// Draws the Won Menu
+        /// </summary>
+        /// <param name="g">Graphics instance</param>
         internal void DrawWon(Graphics g)
         {
             PlayWonMusic();
@@ -158,6 +183,11 @@ namespace SpaceInvaders
                 $"{game.PlayerShip.Points} Points";
             g.DrawString(text, font, brush, drawingArea, stringFormat);
         }
+
+        /// <summary>
+        /// Draws the Controls Menu
+        /// </summary>
+        /// <param name="g">Graphics instance</param>
         internal void DrawControls(Graphics g)
         {
             string text = "Use <LEFT> and <RIGHT> arrows to move your ship :          \0\n" +
@@ -181,11 +211,12 @@ namespace SpaceInvaders
 
             rectangle = new Rectangle(game.GameSize.Width / 2 + 169, game.GameSize.Height / 2 + 39, 26, 41);
             g.DrawRectangle(new Pen(Color.Gold, 2), rectangle);
-
-
-
         }
 
+        /// <summary>
+        /// Draws the High Score Menu
+        /// </summary>
+        /// <param name="g">Graphics instance</param>
         internal void DrawHighScore(Graphics g)
         {
             string text = $"HIGH SCORE: {game.HighScore}\n" +
@@ -193,42 +224,50 @@ namespace SpaceInvaders
             g.DrawString(text, font, brush, drawingArea, stringFormat);
         }
 
+        /// <summary>
+        /// Draws the Main Menu
+        /// </summary>
+        /// <param name="g">Graphics instance</param>
         internal void DrawMainMenu(Graphics g)
         {
-            // Musique
+            // Music
             PlayMenuMusic();
 
-            // Affichage du logo
+            // Logo display
             Image BackgroundImage = Properties.Resources.logo;
             Rectangle rectangle = new Rectangle(40, 40, game.GameSize.Width-80, game.GameSize.Height*2/5);
             g.DrawImage(BackgroundImage, rectangle);
 
-            // Affichage du texte
+            // Text display
             g.DrawString("PRESS <ENTER> TO SELECT", font, brush, game.GameSize.Width / 2 - 150, game.GameSize.Height / 2 + 60);
 
-            // Affichage du menu selectif
+            // Selective menu display
             int width = game.GameSize.Width / 2;
             int height = game.GameSize.Height / 2 + 120;
             foreach (var item in menuItems)
             {
                 if (item == selectedItem)
                 {
-                    // Couleur de l'item sélectionné
+                    // Selected item color
                     brush.Color = ColorTranslator.FromHtml("#ffe213");
                 }
                 g.DrawString($"{item}", font, brush, width-item.Length*7.4f, height);
                 height += 50;
 
-                // Couleur par défaut du texte
+                // Default text color
                 brush.Color = ColorTranslator.FromHtml("#ed2c0b");
             }
         }
 
-        internal void UpdateMenu(double deltaT, HashSet<Keys> keyPressed)
+        /// <summary>
+        /// Handles all the Menu Options
+        /// </summary>
+        /// <param name="keyPressed">HashSet of all keys pressed</param>
+        internal void UpdateMenu(HashSet<Keys> keyPressed)
         {
             switch (game.State)
             {
-                // Navigation dans le Menu
+                // Main Menu Navigation
                 case Game.GameStates.Menu:
                     if (keyPressed.Contains(Keys.Up))
                     {
@@ -261,6 +300,7 @@ namespace SpaceInvaders
 
                     break;
 
+                // Controls Menu Navigation
                 case Game.GameStates.Controls:
                     if (keyPressed.Contains(Keys.Enter))
                     {
@@ -269,6 +309,7 @@ namespace SpaceInvaders
                     keyPressed.Remove(Keys.Enter);
                     break;
 
+                // High Score Menu Navigation
                 case Game.GameStates.HighScore:
                     if (keyPressed.Contains(Keys.Enter))
                     {
@@ -276,7 +317,6 @@ namespace SpaceInvaders
                     }
                     keyPressed.Remove(Keys.Enter);
                     break;
-
 
                 //Switch the game to Play or Pause if p key is pressed
                 case Game.GameStates.Pause:
@@ -295,6 +335,7 @@ namespace SpaceInvaders
                     }
                     break;
 
+                // Lost Menu Navigation
                 case Game.GameStates.Lost:
                     if (keyPressed.Contains(Keys.Enter))
                     {
@@ -309,27 +350,31 @@ namespace SpaceInvaders
                     }
                     break;
 
+                // Won Menu Navigation
                 case Game.GameStates.Won:
                     if (keyPressed.Contains(Keys.Enter))
                     {
+                        // Music stop to prepare for next one
                         StopMusic();
 
+                        // Reset game and go to next State
                         game.ResetGame();
                         game.State = Game.GameStates.Menu;
+
                         keyPressed.Remove(Keys.Enter);
                     }
                     else if (keyPressed.Contains(Keys.Space)) {
+                        // Music stop to prepare for next one
                         StopMusic();
 
+                        // Reset game and go to next State
                         game.ResetGame();
                         game.State = Game.GameStates.Play;
                         keyPressed.Remove(Keys.Space);
                     }
-
                     break;
 
                 default:
-                    Console.WriteLine("DEFAULT");
                     break;
             }
         }
